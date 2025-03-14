@@ -58,24 +58,24 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
             modelBuilder.Entity<PropertyAmenity>()
                 .HasKey(pa => new { pa.PropertyId, pa.AmenityId });
 
-            // One-to-Many Relationships
-            modelBuilder.Entity<Notification>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //// One-to-Many Relationships
+            //modelBuilder.Entity<Notification>()
+            //    .HasOne<User>()
+            //    .WithMany()
+            //    .HasForeignKey(n => n.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<SearchHistory>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(sh => sh.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<SearchHistory>()
+            //    .HasOne<User>()
+            //    .WithMany()
+            //    .HasForeignKey(sh => sh.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<ChatMessage>()
-                .HasOne<User>()
-                .WithMany()
-                .HasForeignKey(cm => cm.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<ChatMessage>()
+            //    .HasOne<User>()
+            //    .WithMany()
+            //    .HasForeignKey(cm => cm.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
