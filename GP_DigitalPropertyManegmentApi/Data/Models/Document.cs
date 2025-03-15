@@ -5,5 +5,8 @@
         public int DocumentId { get; set; }
         public string DocumentType { get; set; }
         public DateTime UploadedAt { get; set; }
+
+        public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
+
     }
 }

@@ -48,12 +48,15 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public double Longitude { get; set; }
 
         //Navigation Properties
-        public ICollection<PropertyImage> PropertyImages { get; set; }
-        public ICollection<UserPropertyReview> UserPropertyReviews { get; set; }
-        public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
-        public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
+        // OneToMany With PropertyImage
+        public ICollection<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
+
+        //ManyToMany
+        public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
+        public ICollection<UserPropertyReview> UserPropertyReviews { get; set; } 
         public ICollection<UserPropertyFavorite> UserPropertyFavorites { get; set; }
-        public ICollection<PropertyAmenity> PropertyAmenities { get; set; }
+        public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
+        public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
 
     }
 }

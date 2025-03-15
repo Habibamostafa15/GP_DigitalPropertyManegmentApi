@@ -8,7 +8,9 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public string Message { get; set; }
         public bool IsRead { get; set; }
         public DateTime SentAt { get; set; }
-        public int? UserId { get; set; }
-        public User User { get; set; }
+
+        // OneToMany With User
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }
+

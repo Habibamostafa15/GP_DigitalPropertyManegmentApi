@@ -31,12 +31,12 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<PropertyImage> PropertiesImages { get; set; }
 
         public DbSet<UserPropertyReview> UserPropertyReviews { get; set; }
         public DbSet<UserPropertyFavorite> UserPropertyFavorites { get; set; }
         public DbSet<UserPropertyDocument> UserPropertyDocuments { get; set; }
         public DbSet<UserPropertyPayment> UserPropertyPayments { get; set; }
-        public DbSet<PropertyAmenity> PropertyAmenities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,8 +55,8 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
             modelBuilder.Entity<UserPropertyPayment>()
                 .HasKey(up => new { up.UserId, up.PropertyId, up.PaymentId });
 
-            modelBuilder.Entity<PropertyAmenity>()
-                .HasKey(pa => new { pa.PropertyId, pa.AmenityId });
+            //modelBuilder.Entity<PropertyAmenity>()
+            //    .HasKey(pa => new { pa.PropertyId, pa.AmenityId });
 
             //// One-to-Many Relationships
             //modelBuilder.Entity<Notification>()
