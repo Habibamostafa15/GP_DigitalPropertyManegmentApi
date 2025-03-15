@@ -12,12 +12,24 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
-        public ICollection<ChatMessage> ChatMessages { get; set; }
-        public ICollection<Preference> Preferences { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
-        public ICollection<SearchHistory> SearchHistories { get; set; }
-        public ICollection<UserPropertyFavorite> UserPropertyFavorites { get; set; }
+        //Navigational Properties
+        // OneToMany With Notification
+        public int? NotificationId { get; set; }
+        public Notification Notification { get; set; }
+
+        // OneToMany With ChatMessage
+        public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
+
+        // OneToMany With Preference
+        public ICollection<Preference> Preferences { get; set; } = new List<Preference>();
+
+        // OneToMany With SearchHistory
+        public ICollection<SearchHistory> SearchHistories { get; set; } = new List<SearchHistory>();
+
+        // ManyToMany
         public ICollection<UserPropertyReview> UserPropertyReviews { get; set; }
+        public ICollection<UserPropertyFavorite> UserPropertyFavorites { get; set; }
+
         public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
         public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
     }

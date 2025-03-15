@@ -7,5 +7,8 @@
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
         public DateTime PaidAt { get; set; }
+
+        public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
+
     }
 }

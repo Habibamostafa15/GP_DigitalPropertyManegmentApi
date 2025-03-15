@@ -8,6 +8,8 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public int ImageId { get; set; }
         public string ImageUrl { get; set; }
         public DateTime UploadedAt { get; set; }
+
+        // OneToMany With Property
         public int? PropertyId { get; set; }
         public Property Property { get; set; }
     }
