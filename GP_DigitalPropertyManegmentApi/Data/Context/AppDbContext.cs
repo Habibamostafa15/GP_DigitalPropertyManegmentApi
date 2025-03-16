@@ -11,7 +11,7 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
 
 
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=DigitalPropertyDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=db15711.public.databaseasp.net; Database=db15711; User Id=db15711; Password=8m=Z?9Ej7He#; Encrypt=False; MultipleActiveResultSets=True;");
 
             base.OnConfiguring(optionsBuilder);
         }
