@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GP_DigitalPropertyManegmentApi", "GP_DigitalPropertyManegmentApi\GP_DigitalPropertyManegmentApi.csproj", "{4495BED0-7677-476F-9E08-FDCB2DBACEC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitslPropertyManangementDAL", "DigitslPropertyManangementDAL\DigitslPropertyManangementDAL.csproj", "{BCAE16DD-ECBE-4142-AA5E-A13E2B202863}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalPropertyManagementBLL", "DigitalPropertyManagementBLL\DigitalPropertyManagementBLL.csproj", "{DE279ECF-FAF4-4326-8915-83A56807D71C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{4495BED0-7677-476F-9E08-FDCB2DBACEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4495BED0-7677-476F-9E08-FDCB2DBACEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4495BED0-7677-476F-9E08-FDCB2DBACEC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCAE16DD-ECBE-4142-AA5E-A13E2B202863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCAE16DD-ECBE-4142-AA5E-A13E2B202863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCAE16DD-ECBE-4142-AA5E-A13E2B202863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCAE16DD-ECBE-4142-AA5E-A13E2B202863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE279ECF-FAF4-4326-8915-83A56807D71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE279ECF-FAF4-4326-8915-83A56807D71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE279ECF-FAF4-4326-8915-83A56807D71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE279ECF-FAF4-4326-8915-83A56807D71C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
