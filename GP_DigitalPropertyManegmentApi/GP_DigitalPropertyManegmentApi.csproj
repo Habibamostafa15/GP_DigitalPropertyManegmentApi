@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DigitalPropertyManagementBLL\DigitalPropertyManagementBLL.csproj" />
     <ProjectReference Include="..\DigitslPropertyManangementDAL\DigitslPropertyManangementDAL.csproj" />
   </ItemGroup>
