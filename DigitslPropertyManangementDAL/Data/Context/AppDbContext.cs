@@ -7,14 +7,11 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
     public class AppDbContext : DbContext
 
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-
+        public AppDbContext(DbContextOptions<AppDbContext>options):base(options)
         {
-            optionsBuilder.UseSqlServer("Server=db15711.public.databaseasp.net; Database=db15711; User Id=db15711; Password=8m=Z?9Ej7He#; Encrypt=False; MultipleActiveResultSets=True;");
-
-            base.OnConfiguring(optionsBuilder);
+            
         }
+   
 
 
       
