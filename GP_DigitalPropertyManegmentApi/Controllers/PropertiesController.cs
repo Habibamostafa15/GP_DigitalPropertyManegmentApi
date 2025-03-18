@@ -55,21 +55,69 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         public async Task<IActionResult> GetPropertiesByType([FromRoute]string type)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByTypeAsync(type);
-            return Ok(properties);
+            var propertiesRead = properties.Select(p => new PropertiesReadDto
+            {
+                PropertyId = p.PropertyId,
+                Size = p.Size,
+                Title = p.Title,
+                Description = p.Description,
+                PropertyType = p.PropertyType,
+                Bedrooms = p.Bedrooms,
+                Bathrooms = p.Bathrooms,
+                Street = p.Street,
+                City = p.City,
+                Governate = p.Governate,
+                PropertyImages = p.PropertyImages,
+                ListedAt = p.ListedAt,
+                Price = p.Price,
+            });
+            return Ok(propertiesRead);
         }
 
         [HttpGet("GetByCity/{city:alpha}")]
         public async Task<IActionResult> GetPropertiesByCity([FromRoute]string city)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByCityAsync(city);
-            return Ok(properties);
+            var propertiesRead = properties.Select(p => new PropertiesReadDto
+            {
+                PropertyId = p.PropertyId,
+                Size = p.Size,
+                Title = p.Title,
+                Description = p.Description,
+                PropertyType = p.PropertyType,
+                Bedrooms = p.Bedrooms,
+                Bathrooms = p.Bathrooms,
+                Street = p.Street,
+                City = p.City,
+                Governate = p.Governate,
+                PropertyImages = p.PropertyImages,
+                ListedAt = p.ListedAt,
+                Price = p.Price,
+            });
+            return Ok(propertiesRead);
         }
 
         [HttpGet("GetByGovernerate/{governerate:alpha}")]
-        public async Task<IActionResult> GetPropertiesByGovernerate(string governerate)
+        public async Task<IActionResult> GetPropertiesByGovernerate([FromRoute]string governerate)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByCityAsync(governerate);
-            return Ok(properties);
+            var propertiesRead = properties.Select(p => new PropertiesReadDto
+            {
+                PropertyId = p.PropertyId,
+                Size = p.Size,
+                Title = p.Title,
+                Description = p.Description,
+                PropertyType = p.PropertyType,
+                Bedrooms = p.Bedrooms,
+                Bathrooms = p.Bathrooms,
+                Street = p.Street,
+                City = p.City,
+                Governate = p.Governate,
+                PropertyImages = p.PropertyImages,
+                ListedAt = p.ListedAt,
+                Price = p.Price,
+            });
+            return Ok(propertiesRead);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace DigitalPropertyManagementBLL.Repositories
 
             if (!string.IsNullOrWhiteSpace(filter.PropertyType))
             {
-                query = query.Where(p => p.PropertyType == filter.PropertyType);
+                query = query.Where(p => p.PropertyType.Trim().ToLower() == filter.PropertyType.Trim().ToLower());
             }
 
             if (filter.MaxPrice.HasValue)
@@ -76,17 +76,17 @@ namespace DigitalPropertyManagementBLL.Repositories
 
         public async Task<IEnumerable<Property>> GetPropertiesByCityAsync(string city)
         {
-            return await _context.Properties.Where(p => p.City == city).ToListAsync();
+            return await _context.Properties.Where(p => p.City.Trim().ToLower() == city.Trim().ToLower()).ToListAsync();
         }
 
         public async Task<IEnumerable<Property>> GetPropertiesByGovernorateAsync(string governorate)
         {
-            return await _context.Properties.Where(p => p.Governate == governorate).ToListAsync();
+            return await _context.Properties.Where(p => p.Governate.Trim().ToLower() == governorate.Trim().ToLower()).ToListAsync();
         }
 
         public async Task<IEnumerable<Property>> GetPropertiesByTypeAsync(string propertyType)
         {
-            return await _context.Properties.Where(p => p.PropertyType == propertyType).ToListAsync();
+            return await _context.Properties.Where(p => p.PropertyType.Trim().ToLower() == propertyType.Trim().ToLower()).ToListAsync();
         }
     }
 }
