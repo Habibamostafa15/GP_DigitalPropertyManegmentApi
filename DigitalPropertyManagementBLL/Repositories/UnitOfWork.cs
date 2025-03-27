@@ -16,11 +16,14 @@ namespace DigitalPropertyManagementBLL.Repositories
 
         public IFavoriteRepository Favorites { get; private set; }
 
+        public IReviewRepository Reviews { get; private set; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Properties=new PropertyRepository(context);
             Favorites=new FavoriteRepository(context);
+            Reviews = new ReviewRepository(context);
         }
 
         public async Task<int> SaveAllAsync()
