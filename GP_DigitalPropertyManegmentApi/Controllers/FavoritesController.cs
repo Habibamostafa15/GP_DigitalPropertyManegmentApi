@@ -25,12 +25,33 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok("Property added to favorites.");
         }
 
-        [HttpGet("favorites/{userId}")]
-        public async Task<IActionResult> GetFavoriteProperties(int userId)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetFavoriteProperties([FromRoute]int userId)
         {
             var properties = await _unitOfWork.Favorites.GetFavoritePropertiesAsync(userId);
             return Ok(properties);
 
         }
+
+        [HttpGet("{userId}/added/{propertyId}")]
+        public async Task<IActionResult> IsFavorite([FromRoute] int userId, [FromRoute] int propertyId)
+        {
+            var isFav = await _unitOfWork.Favorites.IsFavoriteAsync(userId, propertyId);
+            return Ok(isFav);
+        }
+
+        [HttpDelete("{userId}/remove/{propertyId}")]
+        public async Task<IActionResult> RemoveFromFavorites(int userId, int propertyId)
+        {
+            var success = await _unitOfWork.Favorites.RemoveFromFavoritesAsync(userId, propertyId);
+            if (!success)
+            {
+                return NotFound("Favorite not found.");
+            }
+                
+            await _unitOfWork.SaveAllAsync();
+            return Ok("Property removed from favorites.");
+        }
     }
+    
 }
