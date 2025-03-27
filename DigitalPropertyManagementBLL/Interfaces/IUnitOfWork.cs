@@ -10,6 +10,8 @@ namespace DigitalPropertyManagementBLL.Interfaces
     {
         IPropertyRepository Properties { get; }
         IFavoriteRepository Favorites { get; }
+        IReviewRepository Reviews { get; }
+
         Task<int> SaveAllAsync();
     }
 }
