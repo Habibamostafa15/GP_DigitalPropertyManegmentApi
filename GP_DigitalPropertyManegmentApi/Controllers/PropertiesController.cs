@@ -1,5 +1,6 @@
 ﻿using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
+using GP_DigitalPropertyManegmentApi.Data.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -119,5 +120,73 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             });
             return Ok(propertiesRead);
         }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateProperty([FromBody] PropertyCreateDto propertyDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var newProperty = new Property
+            {
+                Size = propertyDto.Size,
+                Title = propertyDto.Title,
+                Description = propertyDto.Description,
+                PropertyType = propertyDto.PropertyType,
+                Bedrooms = propertyDto.Bedrooms,
+                Bathrooms = propertyDto.Bathrooms,
+                Street = propertyDto.Street,
+                City = propertyDto.City,
+                Governate = propertyDto.Governate,
+                Price = propertyDto.Price,
+                ListedAt = DateTime.UtcNow,
+                
+                
+            };
+
+            await _unitOfWork.Properties.AddAsync(newProperty);
+            await _unitOfWork.SaveAllAsync();
+
+            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.PropertyId }, newProperty);
+        }
+
+        [HttpPut("Update/{id:int}")]
+        public async Task<IActionResult> UpdateProperty([FromRoute] int id, [FromBody] PropertyUpdateDto updateDto)
+        {
+            var existing = await _unitOfWork.Properties.GetByIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            existing.Size = updateDto.Size;
+            existing.Title = updateDto.Title;
+            existing.Description = updateDto.Description;
+            existing.PropertyType = updateDto.PropertyType;
+            existing.Bedrooms = updateDto.Bedrooms;
+            existing.Bathrooms = updateDto.Bathrooms;
+            existing.Street = updateDto.Street;
+            existing.City = updateDto.City;
+            existing.Governate = updateDto.Governate;
+            existing.Price = updateDto.Price;
+
+            _unitOfWork.Properties.Update(existing);
+            await _unitOfWork.SaveAllAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpDelete("Delete/{id:int}")]
+        public async Task<IActionResult> DeleteProperty([FromRoute] int id)
+        {
+            var existing = await _unitOfWork.Properties.GetByIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            _unitOfWork.Properties.Delete(existing);
+            await _unitOfWork.SaveAllAsync();
+
+            return Ok($"Property with ID {id} was deleted.");
+        }
+
     }
 }
