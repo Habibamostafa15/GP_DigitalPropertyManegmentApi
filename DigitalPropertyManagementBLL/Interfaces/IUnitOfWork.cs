@@ -11,7 +11,7 @@ namespace DigitalPropertyManagementBLL.Interfaces
         IPropertyRepository Properties { get; }
         IFavoriteRepository Favorites { get; }
         IReviewRepository Reviews { get; }
-
+        IUserRepository Users { get; }
         Task<int> SaveAllAsync();
     }
 }
