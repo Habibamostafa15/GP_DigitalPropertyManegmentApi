@@ -13,25 +13,30 @@ namespace DigitalPropertyManagementBLL.Repositories
         {
             _context = context;
         }
-//*******************************************************************************
+
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
+
         public async Task AddUserAsync(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to add user: {ex.Message}", ex);
+            }
         }
-
-//******************************************************************************************
-
 
         public async Task<bool> IsUserExistsAsync(string email)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email);
+            return await _context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
         }
- //*************************************************************************************
+
         public async Task<bool> UpdateUserPasswordAsync(string email, string newPassword)
         {
             var user = await GetUserByEmailAsync(email);
@@ -39,11 +44,17 @@ namespace DigitalPropertyManagementBLL.Repositories
             {
                 user.PasswordHash = newPassword;
                 _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-                return true;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Failed to update user password: {ex.Message}", ex);
+                }
             }
             return false;
         }
-  // *****************************************************************************************
     }
 }
