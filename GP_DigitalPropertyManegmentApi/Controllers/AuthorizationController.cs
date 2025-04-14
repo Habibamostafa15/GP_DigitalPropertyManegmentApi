@@ -21,7 +21,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             _userService = userService;
             _logger = logger;
         }
-// *********************************************************************************************************************************
+
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] UserDTO userDto)
         {
@@ -48,16 +48,16 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                     return BadRequest(new { Status = "Error", Message = "Registration failed. Email might be taken, passwords might not match, or terms not accepted." });
                 }
 
+                _logger.LogInformation($"User with email {userDto.Email} registered successfully.");
                 return Ok(new { Status = "Success", Message = "User registered successfully." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while registering user with email: {userDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while registering the user. Please try again later." });
             }
         }
 
-  // ****************************************************************************************************************************************
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
@@ -81,18 +81,19 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 if (!result)
                 {
                     _logger.LogWarning($"Login failed for email: {loginDto.Email}. Invalid email or password.");
-                    return Unauthorized(new { Status = "Error", Message = "Invalid email or password." });
+                    return Unauthorized(new { Status = "Error", Message = "Invalid email or password. Please check your credentials and try again." });
                 }
 
+                _logger.LogInformation($"User with email {loginDto.Email} logged in successfully.");
                 return Ok(new { Status = "Success", Message = "Login successful." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while logging in user with email: {loginDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while logging in. Please try again later." });
             }
         }
- // *************************************************************************************************************************************
+
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] EmailDTO emailDto)
         {
@@ -116,19 +117,19 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 if (!result)
                 {
                     _logger.LogWarning($"Failed to send OTP to email: {emailDto.Email}. User not found or error occurred.");
-                    return NotFound(new { Status = "Error", Message = "Email not found." });
+                    return NotFound(new { Status = "Error", Message = "Email not found. Please ensure the email is registered." });
                 }
 
-                return Ok(new { Status = "Success", Message = "OTP has been sent to your email." });
+                _logger.LogInformation($"OTP sent to email: {emailDto.Email} for password reset.");
+                return Ok(new { Status = "Success", Message = "OTP has been sent to your email for password reset." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while sending OTP to {emailDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while sending the OTP. Please try again later." });
             }
         }
 
- // ************************************************************************************************************************************************
         [HttpPost("resend-otp")]
         public async Task<IActionResult> ResendOtp([FromBody] EmailDTO emailDto)
         {
@@ -152,18 +153,19 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 if (!result)
                 {
                     _logger.LogWarning($"Failed to resend OTP to email: {emailDto.Email}. User not found, OTP still valid, or error occurred.");
-                    return BadRequest(new { Status = "Error", Message = "Email not found or please wait before requesting a new OTP." });
+                    return BadRequest(new { Status = "Error", Message = "Email not found, an OTP is still valid, or please wait 60 seconds before requesting a new OTP." });
                 }
 
+                _logger.LogInformation($"New OTP sent to email: {emailDto.Email}.");
                 return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while resending OTP to {emailDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while resending the OTP. Please try again later." });
             }
         }
-  // ***************************************************************************************************************************************
+
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] OTPDTO otpDto)
         {
@@ -192,19 +194,19 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 if (!result)
                 {
                     _logger.LogWarning($"Invalid OTP provided for email: {otpDto.Email}.");
-                    return BadRequest(new { Status = "Error", Message = "Invalid or expired OTP." });
+                    return BadRequest(new { Status = "Error", Message = "Invalid or expired OTP. Please request a new OTP if needed." });
                 }
 
+                _logger.LogInformation($"OTP verified successfully for email: {otpDto.Email}.");
                 return Ok(new { Status = "Success", Message = "OTP verified successfully." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while verifying OTP for {otpDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while verifying the OTP. Please try again later." });
             }
         }
 
-// ******************************************************************************************************************************************************
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDto)
         {
@@ -238,18 +240,19 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 if (!result)
                 {
                     _logger.LogWarning($"Failed to reset password for email: {resetPasswordDto.Email}.");
-                    return BadRequest(new { Status = "Error", Message = "Failed to reset password. Ensure the email is correct." });
+                    return BadRequest(new { Status = "Error", Message = "Failed to reset password. Ensure the email is correct and the OTP has been verified." });
                 }
 
+                _logger.LogInformation($"Password reset successfully for email: {resetPasswordDto.Email}.");
                 return Ok(new { Status = "Success", Message = "Password reset successfully." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while resetting password for {resetPasswordDto.Email}.");
-                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred. Please try again later." });
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while resetting the password. Please try again later." });
             }
         }
-  // **********************************************************************************************************************************************
+
         private bool IsValidEmail(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
