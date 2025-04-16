@@ -1,11 +1,12 @@
 ﻿
 
+using DigitslPropertyManangementDAL.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GP_DigitalPropertyManegmentApi.Data.Context
 {
-    public class Property
+    public class Property : BaseEntity
     {
       
 

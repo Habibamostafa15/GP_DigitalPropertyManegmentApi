@@ -1,4 +1,5 @@
-﻿using DigitalPropertyManagementBLL.Interfaces;
+﻿using DigitalPropertyManagementBLL;
+using DigitalPropertyManagementBLL.Interfaces;
 using DigitalPropertyManagementBLL.Repositories;
 using DigitalPropertyManagementBLL.Services;
 using GP_DigitalPropertyManegmentApi.Data.Context;
@@ -41,7 +42,12 @@ namespace GP_DigitalPropertyManegmentApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IEmailService, EmailService>(); 
+            builder.Services.AddScoped<IEmailService, EmailService>();
+
+            builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
+
+            builder.Services.AddScoped<IServicesManager, ServicesManager>();
+
 
 
             var app = builder.Build();
