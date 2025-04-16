@@ -11,34 +11,43 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
     public class PropertiesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PropertiesController(IUnitOfWork unitOfWork)
+        private readonly IServicesManager servicesManager;
+
+        public PropertiesController(IUnitOfWork unitOfWork, IServicesManager servicesManager)
         {
             _unitOfWork = unitOfWork;
+            this.servicesManager = servicesManager;
         }
+
+        //[HttpGet("GetAll")]
+        //public async Task<IActionResult> GetAllProperties([FromQuery] PropertyFilterDto filterDto)
+        //{
+        //    var properties = await _unitOfWork.Properties.GetAllAsync(filterDto);
+        //    var propertiesRead = properties.Select(p => new PropertiesReadDto
+        //    {
+        //        PropertyId = p.PropertyId,
+        //        Size = p.Size,
+        //        Title = p.Title,
+        //        Description = p.Description,
+        //        PropertyType = p.PropertyType,
+        //        Bedrooms = p.Bedrooms,
+        //        Bathrooms = p.Bathrooms,
+        //        Street = p.Street,
+        //        City = p.City,
+        //        Governate = p.Governate,
+        //        PropertyImages = p.PropertyImages,
+        //        ListedAt = p.ListedAt,
+        //        Price = p.Price,
+        //    });
+        //    return Ok(propertiesRead);
+        //}
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllProperties([FromQuery] PropertyFilterDto filterDto)
+        public async Task<IActionResult> GetAllProperty([FromQuery] PropertySpecificationsParameters specParams)
         {
-            var properties = await _unitOfWork.Properties.GetAllAsync(filterDto);
-            var propertiesRead = properties.Select(p => new PropertiesReadDto
-            {
-                PropertyId = p.PropertyId,
-                Size = p.Size,
-                Title = p.Title,
-                Description = p.Description,
-                PropertyType = p.PropertyType,
-                Bedrooms = p.Bedrooms,
-                Bathrooms = p.Bathrooms,
-                Street = p.Street,
-                City = p.City,
-                Governate = p.Governate,
-                PropertyImages = p.PropertyImages,
-                ListedAt = p.ListedAt,
-                Price = p.Price,
-            });
-            return Ok(propertiesRead);
+            var properties = await servicesManager.PropertyServices.GetAllAsync(specParams);
+            return Ok(properties);
         }
-
 
         [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetPropertyById([FromRoute] int id)
