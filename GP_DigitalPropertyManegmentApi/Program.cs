@@ -26,7 +26,7 @@ namespace GP_DigitalPropertyManegmentApi
                 options.AddPolicy("AllowAll", builder =>
                 {
                     builder.AllowAnyOrigin()
-                           .AllowAnyMethod() 
+                           .AllowAnyMethod()
                            .AllowAnyHeader();
                 });
             });
@@ -48,18 +48,24 @@ namespace GP_DigitalPropertyManegmentApi
 
             builder.Services.AddScoped<IServicesManager, ServicesManager>();
 
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
 
 
             var app = builder.Build();
 
-            
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            
+            app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
 
             app.UseHttpsRedirection();
-            app.UseCors("AllowAll"); 
-            app.UseAuthentication(); 
+            app.UseCors("AllowAll");
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 

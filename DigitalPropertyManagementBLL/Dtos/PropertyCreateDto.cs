@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,8 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string Street { get; set; }
         public string City { get; set; }
         public string Governate { get; set; }
+
+        public IEnumerable<IFormFile> Images { get; set; }
+
     }
 }
