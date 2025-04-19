@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GP_DigitalPropertyManegmentApi.Migrations
+namespace DigitslPropertyManangementDAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -293,7 +293,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0444,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2815),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8294),
                             Longitude = 31.235700000000001,
                             Price = 5000.0,
                             PropertyType = "Apartment",
@@ -313,7 +313,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.976500000000001,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2821),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8300),
                             Longitude = 31.1313,
                             Price = 15000.0,
                             PropertyType = "Villa",
@@ -333,7 +333,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.200099999999999,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2824),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8303),
                             Longitude = 29.918700000000001,
                             Price = 3000.0,
                             PropertyType = "Studio",
@@ -353,7 +353,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Dakahlia",
                             IsAvailable = false,
                             Latitude = 31.0364,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2827),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8306),
                             Longitude = 31.380700000000001,
                             Price = 6000.0,
                             PropertyType = "House",
@@ -373,7 +373,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0489,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2861),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8309),
                             Longitude = 31.3462,
                             Price = 20000.0,
                             PropertyType = "Penthouse",
@@ -393,7 +393,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.9876,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2866),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8314),
                             Longitude = 31.2134,
                             Price = 2500.0,
                             PropertyType = "Apartment",
@@ -413,7 +413,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.215599999999998,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2871),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8316),
                             Longitude = 29.955300000000001,
                             Price = 3500.0,
                             PropertyType = "Studio",
@@ -433,7 +433,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.008099999999999,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2874),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8319),
                             Longitude = 31.230599999999999,
                             Price = 10000.0,
                             PropertyType = "Duplex",
@@ -453,7 +453,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Gharbia",
                             IsAvailable = true,
                             Latitude = 30.788499999999999,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2877),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8322),
                             Longitude = 31.001899999999999,
                             Price = 4000.0,
                             PropertyType = "House",
@@ -473,7 +473,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Red Sea",
                             IsAvailable = true,
                             Latitude = 27.257899999999999,
-                            ListedAt = new DateTime(2025, 4, 13, 12, 17, 2, 765, DateTimeKind.Utc).AddTicks(2880),
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8326),
                             Longitude = 33.811599999999999,
                             Price = 25000.0,
                             PropertyType = "Villa",

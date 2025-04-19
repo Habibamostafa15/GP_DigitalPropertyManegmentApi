@@ -6,11 +6,11 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string? PhoneNumber { get; set; } // Nullable لأن Google مش بيوفّرها دايمًا
-        public string? City { get; set; }       // Nullable لنفس السبب
-        public string? BirthOfDate { get; set; } // Nullable لأنها مش مضمونة من Google
-        public string? PasswordHash { get; set; } // Nullable لأن Google Auth مش بيحتاج كلمة سر
-        public string? GoogleId { get; set; }   // حقل جديد لتخزين معرف Google
+        public string? PhoneNumber { get; set; }
+        public string? City { get; set; }     
+        public string? BirthOfDate { get; set; } 
+        public string? PasswordHash { get; set; }
+        public string? GoogleId { get; set; } 
         public bool IsTermsAccepted { get; set; }
         public DateTime CreatedAt { get; set; }
 
