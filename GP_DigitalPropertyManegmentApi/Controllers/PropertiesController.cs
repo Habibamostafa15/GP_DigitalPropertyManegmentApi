@@ -1,6 +1,7 @@
 ﻿using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
 using GP_DigitalPropertyManegmentApi.Data.Context;
+using GP_DigitalPropertyManegmentApi.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,13 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IServicesManager servicesManager;
+        private readonly IConfiguration configuration;
 
-        public PropertiesController(IUnitOfWork unitOfWork, IServicesManager servicesManager)
+        public PropertiesController(IUnitOfWork unitOfWork, IServicesManager servicesManager, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             this.servicesManager = servicesManager;
+            this.configuration = configuration;
         }
 
         //[HttpGet("GetAll")]
@@ -62,7 +65,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
 
         [HttpGet("GetByType/{type:alpha}")]
-        public async Task<IActionResult> GetPropertiesByType([FromRoute]string type)
+        public async Task<IActionResult> GetPropertiesByType([FromRoute] string type)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByTypeAsync(type);
             var propertiesRead = properties.Select(p => new PropertiesReadDto
@@ -85,7 +88,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         }
 
         [HttpGet("GetByCity/{city:alpha}")]
-        public async Task<IActionResult> GetPropertiesByCity([FromRoute]string city)
+        public async Task<IActionResult> GetPropertiesByCity([FromRoute] string city)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByCityAsync(city);
             var propertiesRead = properties.Select(p => new PropertiesReadDto
@@ -108,7 +111,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         }
 
         [HttpGet("GetByGovernerate/{governerate:alpha}")]
-        public async Task<IActionResult> GetPropertiesByGovernerate([FromRoute]string governerate)
+        public async Task<IActionResult> GetPropertiesByGovernerate([FromRoute] string governerate)
         {
             var properties = await _unitOfWork.Properties.GetPropertiesByCityAsync(governerate);
             var propertiesRead = properties.Select(p => new PropertiesReadDto
@@ -131,7 +134,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateProperty([FromBody] PropertyCreateDto propertyDto)
+        public async Task<IActionResult> CreateProperty([FromForm] PropertyCreateDto propertyDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -149,9 +152,14 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 Governate = propertyDto.Governate,
                 Price = propertyDto.Price,
                 ListedAt = DateTime.UtcNow,
-                
-                
+
             };
+            var imagesPath = DocumentSettings.UploadFiles(propertyDto.Images, "images");
+            foreach (var image in imagesPath)
+            {
+                newProperty.PropertyImages.Add(new PropertyImage() 
+                { ImageUrl = $"{configuration["BaseUrl"]}/files/images/{image}", PropertyId = newProperty.PropertyId });
+            }
 
             await _unitOfWork.Properties.AddAsync(newProperty);
             await _unitOfWork.SaveAllAsync();
@@ -190,7 +198,12 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             var existing = await _unitOfWork.Properties.GetByIdAsync(id);
             if (existing == null)
                 return NotFound();
-
+            List<string> images = new List<string>();
+            foreach (var image in existing.PropertyImages)
+            {
+                images.Add(image.ImageUrl);
+            }
+            DocumentSettings.DeleteFiles(images);
             _unitOfWork.Properties.Delete(existing);
             await _unitOfWork.SaveAllAsync();
 
