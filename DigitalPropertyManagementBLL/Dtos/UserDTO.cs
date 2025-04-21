@@ -28,6 +28,7 @@ namespace DigitalPropertyManagementBLL.Dtos
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public bool IsTermsAccepted { get; set; } = false; // قيمة افتراضية
+        [Required(ErrorMessage = "You must accept the terms and conditions.")]
+        public bool IsTermsAccepted { get; set; } // إضافة Required مع رسالة خطأ
     }
 }
