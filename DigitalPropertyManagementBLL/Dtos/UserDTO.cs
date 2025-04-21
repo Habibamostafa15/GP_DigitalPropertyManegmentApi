@@ -8,17 +8,17 @@ namespace DigitalPropertyManagementBLL.Dtos
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; }
 
-        public string? LastName { get; set; } // Nullable
+        public string? LastName { get; set; } 
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
 
-        public string? PhoneNumber { get; set; } // Nullable
+        public string? PhoneNumber { get; set; } 
 
-        public string? City { get; set; } // Nullable
+        public string? City { get; set; }
 
-        public string? BirthOfDate { get; set; } // Nullable
+        public string? BirthOfDate { get; set; } 
 
         [Required(ErrorMessage = "Password is required.")]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
@@ -29,6 +29,6 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "You must accept the terms and conditions.")]
-        public bool IsTermsAccepted { get; set; } // إضافة Required مع رسالة خطأ
+        public bool IsTermsAccepted { get; set; } 
     }
 }

@@ -13,9 +13,9 @@
         public string? GoogleId { get; set; }
         public bool IsTermsAccepted { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string Status { get; set; } = "pending"; // إضافة حقل Status مع قيمة افتراضية
+        public string Status { get; set; } = "pending"; 
 
-        // Navigational Properties
+     
         public int? NotificationId { get; set; }
         public Notification? Notification { get; set; }
         public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
