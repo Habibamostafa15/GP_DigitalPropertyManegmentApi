@@ -12,7 +12,7 @@ namespace DigitalPropertyManagementBLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private static readonly Dictionary<string, (string Otp, DateTime Expiry, DateTime LastRequestTime)> _otpStore = new();
+        private static readonly Dictionary<string, (string Otp, DateTime Expiry, DateTime LastRequestTime, string Purpose)> _otpStore = new();
 
         public UserService(IUserRepository userRepository, IEmailService emailService, IPasswordHasher<User> passwordHasher)
         {
@@ -61,7 +61,7 @@ namespace DigitalPropertyManagementBLL.Services
                 return false;
             }
 
-            await StoreOtpAsync(userDto.Email, otp);
+            await StoreOtpAsync(userDto.Email, otp, "signup");
 
             try
             {
@@ -116,38 +116,46 @@ namespace DigitalPropertyManagementBLL.Services
             return otp;
         }
 
-        public async Task<bool> VerifyOtpAsync(string email, string enteredOtp)
+        public async Task<(bool Success, string Message)> VerifyOtpAsync(string email, string enteredOtp)
         {
-            var storedOtp = await GetStoredOtpAsync(email);
+            var storedOtpData = await GetStoredOtpAsync(email);
 
-            if (storedOtp == null)
+            if (storedOtpData == null || storedOtpData?.Otp == null)
             {
                 Console.WriteLine("No OTP found for this email or OTP expired.");
-                return false;
+                return (false, "Invalid or expired OTP.");
             }
 
-            bool isValid = storedOtp == enteredOtp;
+            bool isValid = storedOtpData.Value.Otp == enteredOtp;
 
             if (isValid)
             {
                 var user = await _userRepository.GetUserByEmailAsync(email.ToLower());
-                if (user != null)
+                if (user != null && storedOtpData.Value.Purpose == "signup")
                 {
                     user.Status = "active";
                     await _userRepository.UpdateUserPasswordAsync(email, user.PasswordHash);
+                    await ClearStoredOtpAsync(email);
+                    return (true, "Account activated successfully.");
                 }
-                await ClearStoredOtpAsync(email);
-            }
-            else
-            {
-                Console.WriteLine($"Stored OTP: {storedOtp}, Entered OTP: {enteredOtp}");
+                else if (storedOtpData.Value.Purpose == "passwordreset")
+                {
+                    return (true, "OTP verified successfully. You can now reset your password.");
+                }
             }
 
-            return isValid;
+            Console.WriteLine($"Stored OTP: {storedOtpData?.Otp}, Entered OTP: {enteredOtp}");
+            return (false, "Invalid OTP.");
         }
 
         public async Task<bool> ResetPasswordAsync(string email, string newPassword, string confirmPassword)
         {
+            var storedOtpData = await GetStoredOtpAsync(email);
+            if (storedOtpData == null || storedOtpData?.Purpose != "passwordreset")
+            {
+                return false;
+            }
+
             if (newPassword != confirmPassword)
             {
                 return false;
@@ -161,37 +169,37 @@ namespace DigitalPropertyManagementBLL.Services
 
             var hashedPassword = _passwordHasher.HashPassword(null, newPassword);
             await _userRepository.UpdateUserPasswordAsync(email, hashedPassword);
+            await ClearStoredOtpAsync(email);
             return true;
         }
 
-        public async Task<bool> ForgotPasswordAsync(string email)
+        public async Task<(bool Success, string Message)> ForgotPasswordAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email.ToLower());
             if (user == null)
             {
-                return false;
+                return (false, "Email not found.");
             }
 
             var otp = await GenerateOtpAsync(email);
             if (string.IsNullOrEmpty(otp))
             {
-                return false;
+                return (false, "Failed to generate OTP.");
             }
 
-            await StoreOtpAsync(email, otp);
+            await StoreOtpAsync(email, otp, "passwordreset");
 
             try
             {
                 await _emailService.SendOtpEmailAsync(email, otp);
                 Console.WriteLine($"OTP {otp} sent to email: {email}.");
+                return (true, "OTP sent successfully for password reset.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to send OTP email: {ex.Message}");
-                return false;
+                return (false, "Failed to send OTP email.");
             }
-
-            return true;
         }
 
         public async Task<(bool Success, string Reason)> ResendOtpAsync(string email, string purpose)
@@ -227,13 +235,13 @@ namespace DigitalPropertyManagementBLL.Services
                 return (false, "Failed to generate OTP.");
             }
 
-            await StoreOtpAsync(email, otp);
+            await StoreOtpAsync(email, otp, "passwordreset");
 
             try
             {
                 await _emailService.SendOtpEmailAsync(email, otp);
                 Console.WriteLine($"OTP {otp} sent to email: {email} for password reset.");
-                return (true, "OTP resent successfully.");
+                return (true, "OTP resent successfully for password reset.");
             }
             catch (Exception ex)
             {
@@ -275,7 +283,7 @@ namespace DigitalPropertyManagementBLL.Services
                 return (false, "Failed to generate OTP.");
             }
 
-            await StoreOtpAsync(email, otp);
+            await StoreOtpAsync(email, otp, "signup");
 
             try
             {
@@ -290,17 +298,17 @@ namespace DigitalPropertyManagementBLL.Services
             }
         }
 
-        private async Task StoreOtpAsync(string email, string otp)
+        private async Task StoreOtpAsync(string email, string otp, string purpose)
         {
-            _otpStore[email] = (otp, DateTime.UtcNow.AddMinutes(5), DateTime.UtcNow);
+            _otpStore[email] = (otp, DateTime.UtcNow.AddMinutes(5), DateTime.UtcNow, purpose);
             await Task.CompletedTask;
         }
 
-        private async Task<string> GetStoredOtpAsync(string email)
+        private async Task<(string Otp, string Purpose)?> GetStoredOtpAsync(string email)
         {
             if (_otpStore.TryGetValue(email, out var otpData) && otpData.Expiry > DateTime.UtcNow)
             {
-                return otpData.Otp;
+                return (otpData.Otp, otpData.Purpose);
             }
             return null;
         }

@@ -148,15 +148,15 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             try
             {
-                var result = await _userService.ForgotPasswordAsync(emailDto.Email);
-                if (!result)
+                var (success, message) = await _userService.ForgotPasswordAsync(emailDto.Email);
+                if (!success)
                 {
-                    _logger.LogWarning($"Failed to send OTP to email: {emailDto.Email}. User not found or error occurred.");
-                    return NotFound(new { Status = "Error", Message = "Email not found. Please ensure the email is registered." });
+                    _logger.LogWarning($"Failed to send OTP to email: {emailDto.Email}. Reason: {message}");
+                    return NotFound(new { Status = "Error", Message = message });
                 }
 
                 _logger.LogInformation($"OTP sent to email: {emailDto.Email} for password reset.");
-                return Ok(new { Status = "Success", Message = "OTP has been sent to your email for password reset." });
+                return Ok(new { Status = "Success", Message = message });
             }
             catch (Exception ex)
             {
@@ -199,7 +199,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 }
 
                 _logger.LogInformation($"New OTP sent to email: {emailDto.Email} for password reset.");
-                return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email for password reset." });
+                return Ok(new { Status = "Success", Message = reason });
             }
             catch (Exception ex)
             {
@@ -242,7 +242,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 }
 
                 _logger.LogInformation($"New email confirmation OTP sent to email: {emailDto.Email}.");
-                return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email for email confirmation." });
+                return Ok(new { Status = "Success", Message = reason });
             }
             catch (Exception ex)
             {
@@ -275,15 +275,15 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             try
             {
-                var result = await _userService.VerifyOtpAsync(otpDto.Email, otpDto.OTP);
-                if (!result)
+                var (success, message) = await _userService.VerifyOtpAsync(otpDto.Email, otpDto.OTP);
+                if (!success)
                 {
                     _logger.LogWarning($"Invalid OTP provided for email: {otpDto.Email}.");
-                    return BadRequest(new { Status = "Error", Message = "Invalid or expired OTP. Please request a new OTP if needed." });
+                    return BadRequest(new { Status = "Error", Message = message });
                 }
 
-                _logger.LogInformation($"OTP verified successfully for email: {otpDto.Email}. Account activated.");
-                return Ok(new { Status = "Success", Message = "OTP verified successfully. Your account is now activated." });
+                _logger.LogInformation($"OTP verified successfully for email: {otpDto.Email}.");
+                return Ok(new { Status = "Success", Message = message });
             }
             catch (Exception ex)
             {
@@ -318,13 +318,14 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             {
                 return BadRequest(new { Status = "Error", Message = "Password must be at least 8 characters long." });
             }
+
             try
             {
                 var result = await _userService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.NewPassword, resetPasswordDto.ConfirmPassword);
                 if (!result)
                 {
-                    _logger.LogWarning($"Failed to reset password for email: {resetPasswordDto.Email}.");
-                    return BadRequest(new { Status = "Error", Message = "Failed to reset password. Ensure the email is correct and the OTP has been verified." });
+                    _logger.LogWarning($"Failed to reset password for email: {resetPasswordDto.Email}. OTP might not be verified for password reset.");
+                    return BadRequest(new { Status = "Error", Message = "Failed to reset password. Please request an OTP for password reset and verify it first." });
                 }
 
                 _logger.LogInformation($"Password reset successfully for email: {resetPasswordDto.Email}.");
