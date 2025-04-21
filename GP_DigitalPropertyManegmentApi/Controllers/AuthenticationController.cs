@@ -15,12 +15,12 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorizationController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger<AuthorizationController> _logger;
+        private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthorizationController(IUserService userService, ILogger<AuthorizationController> logger)
+        public AuthenticationController(IUserService userService, ILogger<AuthenticationController> logger)
         {
             _userService = userService;
             _logger = logger;
