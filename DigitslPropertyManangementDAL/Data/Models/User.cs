@@ -7,12 +7,13 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? City { get; set; }     
-        public string? BirthOfDate { get; set; } 
+        public string? City { get; set; }
+        public string? BirthOfDate { get; set; }
         public string? PasswordHash { get; set; }
-        public string? GoogleId { get; set; } 
+        public string? GoogleId { get; set; }
         public bool IsTermsAccepted { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Status { get; set; } = "pending"; // إضافة حقل Status مع قيمة افتراضية
 
         // Navigational Properties
         public int? NotificationId { get; set; }

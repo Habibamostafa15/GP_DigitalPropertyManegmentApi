@@ -16,11 +16,22 @@ namespace GP_DigitalPropertyManegmentApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddControllers();
+           
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
 
+            
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+           
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", builder =>
@@ -31,6 +42,7 @@ namespace GP_DigitalPropertyManegmentApi
                 });
             });
 
+            
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -38,35 +50,43 @@ namespace GP_DigitalPropertyManegmentApi
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
             builder.Services.AddScoped<IEmailService, EmailService>();
-
-            builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
-
             builder.Services.AddScoped<IServicesManager, ServicesManager>();
 
-            builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-            });
+            
+            builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/api/authorization/login";
+                options.LogoutPath = "/api/authorization/logout";
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = "19324655100-27k3987q8sbg46u7566a2fqhoq8ks1ph.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+                options.CallbackPath = "/api/authorization/google-response";
+                options.SaveTokens = true;
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+            });
 
             var app = builder.Build();
 
             app.UseStaticFiles();
-
             app.UseSwagger();
             app.UseSwaggerUI();
-
-
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
-            app.UseAuthentication();
+            app.UseAuthentication(); 
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();

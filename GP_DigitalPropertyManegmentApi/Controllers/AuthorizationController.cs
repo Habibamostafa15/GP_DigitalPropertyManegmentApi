@@ -1,9 +1,13 @@
 ﻿using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -48,8 +52,8 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                     return BadRequest(new { Status = "Error", Message = "Registration failed. Email might be taken, passwords might not match, or terms not accepted." });
                 }
 
-                _logger.LogInformation($"User with email {userDto.Email} registered successfully.");
-                return Ok(new { Status = "Success", Message = "User registered successfully." });
+                _logger.LogInformation($"User with email {userDto.Email} registered successfully. Awaiting email verification.");
+                return Ok(new { Status = "Success", Message = "Registration successful. Please check your email to verify your account with the OTP." });
             }
             catch (Exception ex)
             {
@@ -77,12 +81,35 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             try
             {
+                var user = await _userService.GetUserByEmailAsync(loginDto.Email.ToLower());
+                if (user == null)
+                {
+                    _logger.LogWarning($"Login failed for email: {loginDto.Email}. User not found.");
+                    return Unauthorized(new { Status = "Error", Message = "Invalid email or password. Please check your credentials and try again." });
+                }
+
+                if (user.Status != "active")
+                {
+                    _logger.LogWarning($"Login failed for email: {loginDto.Email}. Account not verified.");
+                    return Unauthorized(new { Status = "Error", Message = "Your account is not verified. Please verify your email with the OTP sent to you." });
+                }
+
                 var result = await _userService.LoginAsync(loginDto);
                 if (!result)
                 {
                     _logger.LogWarning($"Login failed for email: {loginDto.Email}. Invalid email or password.");
                     return Unauthorized(new { Status = "Error", Message = "Invalid email or password. Please check your credentials and try again." });
                 }
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                 _logger.LogInformation($"User with email {loginDto.Email} logged in successfully.");
                 return Ok(new { Status = "Success", Message = "Login successful." });
@@ -92,6 +119,14 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 _logger.LogError(ex, $"Error occurred while logging in user with email: {loginDto.Email}.");
                 return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while logging in. Please try again later." });
             }
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _logger.LogInformation("User logged out successfully.");
+            return Ok(new { Status = "Success", Message = "Logout successful." });
         }
 
         [HttpPost("forgot-password")]
@@ -149,20 +184,70 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             try
             {
-                var result = await _userService.ResendOtpAsync(emailDto.Email);
-                if (!result)
+                var user = await _userService.GetUserByEmailAsync(emailDto.Email.ToLower());
+                if (user == null)
                 {
-                    _logger.LogWarning($"Failed to resend OTP to email: {emailDto.Email}. User not found, OTP still valid, or error occurred.");
-                    return BadRequest(new { Status = "Error", Message = "Email not found, an OTP is still valid, or please wait 60 seconds before requesting a new OTP." });
+                    _logger.LogWarning($"Failed to resend OTP to email: {emailDto.Email}. User not found.");
+                    return NotFound(new { Status = "Error", Message = "Email not found. Please ensure the email is registered." });
                 }
 
-                _logger.LogInformation($"New OTP sent to email: {emailDto.Email}.");
-                return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email." });
+                var (success, reason) = await _userService.ResendOtpAsync(emailDto.Email, "passwordreset");
+                if (!success)
+                {
+                    _logger.LogWarning($"Failed to resend OTP to email: {emailDto.Email}. Reason: {reason}");
+                    return BadRequest(new { Status = "Error", Message = reason });
+                }
+
+                _logger.LogInformation($"New OTP sent to email: {emailDto.Email} for password reset.");
+                return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email for password reset." });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error occurred while resending OTP to {emailDto.Email}.");
                 return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while resending the OTP. Please try again later." });
+            }
+        }
+
+        [HttpPost("resend-email-confirmation-otp")]
+        public async Task<IActionResult> ResendEmailConfirmationOtp([FromBody] EmailDTO emailDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new { Status = "Error", Message = "Invalid email format.", Errors = errors });
+            }
+
+            if (!IsValidEmail(emailDto.Email))
+            {
+                return BadRequest(new { Status = "Error", Message = "Please provide a valid email address." });
+            }
+
+            try
+            {
+                var user = await _userService.GetUserByEmailAsync(emailDto.Email.ToLower());
+                if (user == null)
+                {
+                    _logger.LogWarning($"Failed to resend email confirmation OTP to email: {emailDto.Email}. User not found.");
+                    return NotFound(new { Status = "Error", Message = "Email not found. Please ensure the email is registered." });
+                }
+
+                var (success, reason) = await _userService.ResendEmailConfirmationOtpAsync(emailDto.Email);
+                if (!success)
+                {
+                    _logger.LogWarning($"Failed to resend email confirmation OTP to email: {emailDto.Email}. Reason: {reason}");
+                    return BadRequest(new { Status = "Error", Message = reason });
+                }
+
+                _logger.LogInformation($"New email confirmation OTP sent to email: {emailDto.Email}.");
+                return Ok(new { Status = "Success", Message = "A new OTP has been sent to your email for email confirmation." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while resending email confirmation OTP to {emailDto.Email}.");
+                return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while resending the email confirmation OTP. Please try again later." });
             }
         }
 
@@ -197,8 +282,8 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                     return BadRequest(new { Status = "Error", Message = "Invalid or expired OTP. Please request a new OTP if needed." });
                 }
 
-                _logger.LogInformation($"OTP verified successfully for email: {otpDto.Email}.");
-                return Ok(new { Status = "Success", Message = "OTP verified successfully." });
+                _logger.LogInformation($"OTP verified successfully for email: {otpDto.Email}. Account activated.");
+                return Ok(new { Status = "Success", Message = "OTP verified successfully. Your account is now activated." });
             }
             catch (Exception ex)
             {
@@ -233,7 +318,6 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             {
                 return BadRequest(new { Status = "Error", Message = "Password must be at least 8 characters long." });
             }
-
             try
             {
                 var result = await _userService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.NewPassword, resetPasswordDto.ConfirmPassword);
@@ -251,6 +335,61 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 _logger.LogError(ex, $"Error occurred while resetting password for {resetPasswordDto.Email}.");
                 return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred while resetting the password. Please try again later." });
             }
+        }
+
+        [HttpGet("login-google")]
+        public async Task<IActionResult> LoginGoogle(string returnUrl = "/")
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!string.IsNullOrEmpty(returnUrl) && !Uri.IsWellFormedUriString(returnUrl, UriKind.Relative))
+            {
+                return BadRequest(new { Status = "Error", Message = "Invalid return URL." });
+            }
+
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action(nameof(GoogleResponse), "Authorization", new { returnUrl }, Request.Scheme),
+                Items = { { "returnUrl", returnUrl } }
+            };
+
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-response")]
+        public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!result.Succeeded)
+            {
+                _logger.LogWarning("Google authentication failed.");
+                return Unauthorized(new { Status = "Error", Message = "Google authentication failed." });
+            }
+
+            var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
+            var firstName = result.Principal.FindFirst(ClaimTypes.GivenName)?.Value;
+            var lastName = result.Principal.FindFirst(ClaimTypes.Surname)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                _logger.LogWarning("Unable to retrieve email from Google.");
+                return BadRequest(new { Status = "Error", Message = "Unable to retrieve email from Google." });
+            }
+
+            var user = await _userService.LoginWithGoogleAsync(email, firstName, lastName);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            _logger.LogInformation($"User with email {email} logged in successfully using Google.");
+            return LocalRedirect(returnUrl);
         }
 
         private bool IsValidEmail(string email)
