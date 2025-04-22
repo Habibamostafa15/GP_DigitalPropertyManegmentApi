@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GP_DigitalPropertyManegmentApi.Migrations
+namespace DigitslPropertyManangementDAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250318120540_SeedingPropertyTableForTesting")]
-    partial class SeedingPropertyTableForTesting
+    [Migration("20250421191515_AddStatusToUser")]
+    partial class AddStatusToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -296,7 +296,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0444,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(920),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1935),
                             Longitude = 31.235700000000001,
                             Price = 5000.0,
                             PropertyType = "Apartment",
@@ -316,7 +316,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.976500000000001,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(934),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1943),
                             Longitude = 31.1313,
                             Price = 15000.0,
                             PropertyType = "Villa",
@@ -336,7 +336,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.200099999999999,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(937),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1946),
                             Longitude = 29.918700000000001,
                             Price = 3000.0,
                             PropertyType = "Studio",
@@ -356,7 +356,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Dakahlia",
                             IsAvailable = false,
                             Latitude = 31.0364,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(940),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1949),
                             Longitude = 31.380700000000001,
                             Price = 6000.0,
                             PropertyType = "House",
@@ -376,7 +376,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0489,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(943),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1952),
                             Longitude = 31.3462,
                             Price = 20000.0,
                             PropertyType = "Penthouse",
@@ -396,7 +396,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.9876,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(947),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1956),
                             Longitude = 31.2134,
                             Price = 2500.0,
                             PropertyType = "Apartment",
@@ -416,7 +416,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.215599999999998,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(950),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1959),
                             Longitude = 29.955300000000001,
                             Price = 3500.0,
                             PropertyType = "Studio",
@@ -436,7 +436,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.008099999999999,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(953),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1962),
                             Longitude = 31.230599999999999,
                             Price = 10000.0,
                             PropertyType = "Duplex",
@@ -456,7 +456,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Gharbia",
                             IsAvailable = true,
                             Latitude = 30.788499999999999,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(956),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1965),
                             Longitude = 31.001899999999999,
                             Price = 4000.0,
                             PropertyType = "House",
@@ -476,7 +476,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                             Governate = "Red Sea",
                             IsAvailable = true,
                             Latitude = 27.257899999999999,
-                            ListedAt = new DateTime(2025, 3, 18, 12, 5, 40, 132, DateTimeKind.Utc).AddTicks(960),
+                            ListedAt = new DateTime(2025, 4, 21, 19, 15, 15, 516, DateTimeKind.Utc).AddTicks(1968),
                             Longitude = 33.811599999999999,
                             Price = 25000.0,
                             PropertyType = "Villa",
@@ -542,16 +542,28 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<string>("BirthOfDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsTermsAccepted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -560,15 +572,20 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                     b.Property<int?>("NotificationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("NotificationId");
 

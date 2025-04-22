@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GP_DigitalPropertyManegmentApi.Migrations
+namespace DigitslPropertyManangementDAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250314225018_UpdateRelationship")]
-    partial class UpdateRelationship
+    [Migration("20250418223445_inial create")]
+    partial class inialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AmenityProperty", b =>
+                {
+                    b.Property<int>("AmenitiesAmenityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertiesPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AmenitiesAmenityId", "PropertiesPropertyId");
+
+                    b.HasIndex("PropertiesPropertyId");
+
+                    b.ToTable("AmenityProperty");
+                });
 
             modelBuilder.Entity("DigitalPropertyManagmentApi.Models.Review", b =>
                 {
@@ -148,12 +163,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("NotificationId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -215,9 +225,6 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropertyId"));
 
-                    b.Property<int?>("AmenityId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Bathrooms")
                         .HasColumnType("int");
 
@@ -275,24 +282,209 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
 
                     b.HasKey("PropertyId");
 
-                    b.HasIndex("AmenityId");
-
                     b.ToTable("Properties");
-                });
 
-            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.PropertyAmenity", b =>
-                {
-                    b.Property<int?>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AmenityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertyId", "AmenityId");
-
-                    b.HasIndex("AmenityId");
-
-                    b.ToTable("PropertyAmenities");
+                    b.HasData(
+                        new
+                        {
+                            PropertyId = 1,
+                            Bathrooms = 2,
+                            Bedrooms = 3,
+                            City = "Cairo",
+                            Description = "A spacious apartment in the heart of Cairo.",
+                            Furnished = true,
+                            Governate = "Cairo",
+                            IsAvailable = true,
+                            Latitude = 30.0444,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8294),
+                            Longitude = 31.235700000000001,
+                            Price = 5000.0,
+                            PropertyType = "Apartment",
+                            Size = 120.0,
+                            Status = "Available",
+                            Street = "Downtown Street",
+                            Title = "Luxury Apartment in Cairo"
+                        },
+                        new
+                        {
+                            PropertyId = 2,
+                            Bathrooms = 4,
+                            Bedrooms = 5,
+                            City = "Giza",
+                            Description = "A luxurious villa with a private pool.",
+                            Furnished = false,
+                            Governate = "Giza",
+                            IsAvailable = true,
+                            Latitude = 29.976500000000001,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8300),
+                            Longitude = 31.1313,
+                            Price = 15000.0,
+                            PropertyType = "Villa",
+                            Size = 300.0,
+                            Status = "Available",
+                            Street = "6th October Road",
+                            Title = "Modern Villa with Pool"
+                        },
+                        new
+                        {
+                            PropertyId = 3,
+                            Bathrooms = 1,
+                            Bedrooms = 1,
+                            City = "Alexandria",
+                            Description = "A modern studio apartment with a sea view.",
+                            Furnished = true,
+                            Governate = "Alexandria",
+                            IsAvailable = true,
+                            Latitude = 31.200099999999999,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8303),
+                            Longitude = 29.918700000000001,
+                            Price = 3000.0,
+                            PropertyType = "Studio",
+                            Size = 50.0,
+                            Status = "Available",
+                            Street = "Corniche Street",
+                            Title = "Beachfront Studio"
+                        },
+                        new
+                        {
+                            PropertyId = 4,
+                            Bathrooms = 3,
+                            Bedrooms = 4,
+                            City = "Mansoura",
+                            Description = "A comfortable house located in a quiet area.",
+                            Furnished = false,
+                            Governate = "Dakahlia",
+                            IsAvailable = false,
+                            Latitude = 31.0364,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8306),
+                            Longitude = 31.380700000000001,
+                            Price = 6000.0,
+                            PropertyType = "House",
+                            Size = 180.0,
+                            Status = "Pending",
+                            Street = "Shobra Street",
+                            Title = "Cozy House in Mansoura"
+                        },
+                        new
+                        {
+                            PropertyId = 5,
+                            Bathrooms = 4,
+                            Bedrooms = 4,
+                            City = "Cairo",
+                            Description = "A high-end penthouse with a rooftop terrace.",
+                            Furnished = true,
+                            Governate = "Cairo",
+                            IsAvailable = true,
+                            Latitude = 30.0489,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8309),
+                            Longitude = 31.3462,
+                            Price = 20000.0,
+                            PropertyType = "Penthouse",
+                            Size = 250.0,
+                            Status = "Available",
+                            Street = "Nasr City Main Road",
+                            Title = "Luxury Penthouse in Nasr City"
+                        },
+                        new
+                        {
+                            PropertyId = 6,
+                            Bathrooms = 1,
+                            Bedrooms = 2,
+                            City = "Giza",
+                            Description = "A budget-friendly apartment near public transportation.",
+                            Furnished = false,
+                            Governate = "Giza",
+                            IsAvailable = true,
+                            Latitude = 29.9876,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8314),
+                            Longitude = 31.2134,
+                            Price = 2500.0,
+                            PropertyType = "Apartment",
+                            Size = 90.0,
+                            Status = "Available",
+                            Street = "Faisal Street",
+                            Title = "Affordable Apartment in Giza"
+                        },
+                        new
+                        {
+                            PropertyId = 7,
+                            Bathrooms = 1,
+                            Bedrooms = 1,
+                            City = "Alexandria",
+                            Description = "A small, fully furnished studio in Alexandria.",
+                            Furnished = true,
+                            Governate = "Alexandria",
+                            IsAvailable = true,
+                            Latitude = 31.215599999999998,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8316),
+                            Longitude = 29.955300000000001,
+                            Price = 3500.0,
+                            PropertyType = "Studio",
+                            Size = 40.0,
+                            Status = "Available",
+                            Street = "Stanley Bridge",
+                            Title = "Furnished Studio in Alexandria"
+                        },
+                        new
+                        {
+                            PropertyId = 8,
+                            Bathrooms = 3,
+                            Bedrooms = 3,
+                            City = "Cairo",
+                            Description = "A stylish duplex in Maadi with garden access.",
+                            Furnished = true,
+                            Governate = "Cairo",
+                            IsAvailable = true,
+                            Latitude = 30.008099999999999,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8319),
+                            Longitude = 31.230599999999999,
+                            Price = 10000.0,
+                            PropertyType = "Duplex",
+                            Size = 200.0,
+                            Status = "Available",
+                            Street = "Maadi Corniche",
+                            Title = "Elegant Duplex in Maadi"
+                        },
+                        new
+                        {
+                            PropertyId = 9,
+                            Bathrooms = 2,
+                            Bedrooms = 3,
+                            City = "Tanta",
+                            Description = "A simple house at an affordable price.",
+                            Furnished = false,
+                            Governate = "Gharbia",
+                            IsAvailable = true,
+                            Latitude = 30.788499999999999,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8322),
+                            Longitude = 31.001899999999999,
+                            Price = 4000.0,
+                            PropertyType = "House",
+                            Size = 160.0,
+                            Status = "Available",
+                            Street = "Tanta Main Road",
+                            Title = "Budget-Friendly House in Tanta"
+                        },
+                        new
+                        {
+                            PropertyId = 10,
+                            Bathrooms = 5,
+                            Bedrooms = 6,
+                            City = "Hurghada",
+                            Description = "A premium villa with private beach access.",
+                            Furnished = true,
+                            Governate = "Red Sea",
+                            IsAvailable = true,
+                            Latitude = 27.257899999999999,
+                            ListedAt = new DateTime(2025, 4, 18, 22, 34, 45, 502, DateTimeKind.Utc).AddTicks(8326),
+                            Longitude = 33.811599999999999,
+                            Price = 25000.0,
+                            PropertyType = "Villa",
+                            Size = 400.0,
+                            Status = "Available",
+                            Street = "Sahl Hasheesh",
+                            Title = "Luxury Beachfront Villa in Hurghada"
+                        });
                 });
 
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.PropertyImage", b =>
@@ -317,7 +509,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImage");
+                    b.ToTable("PropertiesImages");
                 });
 
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.SearchHistory", b =>
@@ -350,30 +542,48 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<string>("BirthOfDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsTermsAccepted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<int?>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("NotificationId");
 
                     b.ToTable("Users");
                 });
@@ -458,19 +668,25 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                     b.ToTable("UserPropertyReviews");
                 });
 
+            modelBuilder.Entity("AmenityProperty", b =>
+                {
+                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenitiesAmenityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", null)
+                        .WithMany()
+                        .HasForeignKey("PropertiesPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.ChatMessage", b =>
                 {
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.User", "User")
                         .WithMany("ChatMessages")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Notification", b =>
-                {
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.User", "User")
-                        .WithMany("Notifications")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -483,32 +699,6 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Property", b =>
-                {
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", null)
-                        .WithMany("Properties")
-                        .HasForeignKey("AmenityId");
-                });
-
-            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.PropertyAmenity", b =>
-                {
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", "Amenity")
-                        .WithMany()
-                        .HasForeignKey("AmenityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", "Property")
-                        .WithMany("PropertyAmenities")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Amenity");
-
-                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.PropertyImage", b =>
@@ -529,10 +719,19 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.User", b =>
+                {
+                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Notification", "Notification")
+                        .WithMany("Users")
+                        .HasForeignKey("NotificationId");
+
+                    b.Navigation("Notification");
+                });
+
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.UserPropertyDocument", b =>
                 {
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Document", "Document")
-                        .WithMany()
+                        .WithMany("UserPropertyDocuments")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -559,7 +758,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.UserPropertyFavorite", b =>
                 {
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Favorite", "Favorite")
-                        .WithMany()
+                        .WithMany("UserPropertyFavorites")
                         .HasForeignKey("FavoriteId");
 
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", "Property")
@@ -584,7 +783,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.UserPropertyPayment", b =>
                 {
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Payment", "Payment")
-                        .WithMany()
+                        .WithMany("UserPropertyPayments")
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -617,7 +816,7 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                         .IsRequired();
 
                     b.HasOne("DigitalPropertyManagmentApi.Models.Review", "Review")
-                        .WithMany()
+                        .WithMany("UserPropertyReviews")
                         .HasForeignKey("ReviewId");
 
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.User", "User")
@@ -633,15 +832,33 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", b =>
+            modelBuilder.Entity("DigitalPropertyManagmentApi.Models.Review", b =>
                 {
-                    b.Navigation("Properties");
+                    b.Navigation("UserPropertyReviews");
+                });
+
+            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Document", b =>
+                {
+                    b.Navigation("UserPropertyDocuments");
+                });
+
+            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Favorite", b =>
+                {
+                    b.Navigation("UserPropertyFavorites");
+                });
+
+            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Notification", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Payment", b =>
+                {
+                    b.Navigation("UserPropertyPayments");
                 });
 
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Property", b =>
                 {
-                    b.Navigation("PropertyAmenities");
-
                     b.Navigation("PropertyImages");
 
                     b.Navigation("UserPropertyDocuments");
@@ -656,8 +873,6 @@ namespace GP_DigitalPropertyManegmentApi.Migrations
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.User", b =>
                 {
                     b.Navigation("ChatMessages");
-
-                    b.Navigation("Notifications");
 
                     b.Navigation("Preferences");
 

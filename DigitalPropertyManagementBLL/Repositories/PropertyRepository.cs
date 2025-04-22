@@ -19,6 +19,12 @@ namespace DigitalPropertyManagementBLL.Repositories
         {
             _context = context;
         }
+
+        public async Task AddAsync(Property property)
+        {
+            await _context.Properties.AddAsync(property);
+        }
+
         public async Task<IEnumerable<Property>> GetAllAsync(PropertyFilterDto filter)
         {
             IQueryable<Property> query = _context.Properties;
@@ -65,6 +71,13 @@ namespace DigitalPropertyManagementBLL.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<Property?> GetByIdAsync(int id)
+        {
+            return await _context.Properties
+           .Include(p => p.PropertyImages)
+           .FirstOrDefaultAsync(p => p.PropertyId == id);
+        }
+
         public async Task<Property> GetDetails(int id)
         {
             return await _context.Properties
@@ -87,6 +100,16 @@ namespace DigitalPropertyManagementBLL.Repositories
         public async Task<IEnumerable<Property>> GetPropertiesByTypeAsync(string propertyType)
         {
             return await _context.Properties.Where(p => p.PropertyType.Trim().ToLower() == propertyType.Trim().ToLower()).ToListAsync();
+        }
+
+        public void Update(Property property)
+        {
+            _context.Properties.Update(property);
+        }
+
+        public void Delete(Property property)
+        {
+            _context.Properties.Remove(property);
         }
     }
 }

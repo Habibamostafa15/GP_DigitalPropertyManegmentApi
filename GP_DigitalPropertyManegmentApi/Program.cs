@@ -1,7 +1,11 @@
-
+﻿using DigitalPropertyManagementBLL;
 using DigitalPropertyManagementBLL.Interfaces;
 using DigitalPropertyManagementBLL.Repositories;
+using DigitalPropertyManagementBLL.Services;
 using GP_DigitalPropertyManegmentApi.Data.Context;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GP_DigitalPropertyManegmentApi
@@ -11,37 +15,77 @@ namespace GP_DigitalPropertyManegmentApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+           
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
 
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            builder.Services.AddCors();
-
-            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
-            builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
-            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+           
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
+            
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IServicesManager, ServicesManager>();
+
+            
+            builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/api/authorization/login";
+                options.LogoutPath = "/api/authorization/logout";
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = "19324655100-27k3987q8sbg46u7566a2fqhoq8ks1ph.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+                options.CallbackPath = "/api/authorization/google-response";
+                options.SaveTokens = true;
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+            });
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowAll");
+            app.UseAuthentication(); 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

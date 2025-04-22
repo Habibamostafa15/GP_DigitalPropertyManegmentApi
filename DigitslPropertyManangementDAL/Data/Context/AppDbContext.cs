@@ -257,6 +257,9 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
 
             modelBuilder.Entity<Property>().HasData(properties);
 
+            modelBuilder.Entity<User>()
+                 .HasIndex(u => u.Email)
+                   .IsUnique();
 
             // Many-to-Many Relationships
             modelBuilder.Entity<UserPropertyReview>()
