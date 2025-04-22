@@ -17,12 +17,12 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         }
 
 
-        [HttpGet("{propertyId}")]
-        public async Task<IActionResult> GetReviewsForProperty([FromRoute] int propertyId)
-        {
-            var propertyReviews = await _unitOfWork.Reviews.GetReviewsForPropertyAsync(propertyId);
-            return Ok(propertyReviews);
-        }
+        //[HttpGet("{propertyId}")]
+        //public async Task<IActionResult> GetReviewsForProperty([FromRoute] int propertyId)
+        //{
+        //    var propertyReviews = await _unitOfWork.Reviews.GetReviewsForPropertyAsync(propertyId);
+        //    return Ok(propertyReviews);
+        //}
 
 
         [HttpPost("{userId}/{propertyId}")]

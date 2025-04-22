@@ -82,8 +82,11 @@ namespace DigitalPropertyManagementBLL.Repositories
         {
             return await _context.Properties
                 .Include(p=>p.PropertyImages)
-                .Include(p=>p.Amenities)
                 .Include(p=>p.UserPropertyReviews)
+                .Include(p=>p.User)
+                .Include(p=>p.ExternalAmenities)
+                .Include(p=>p.InternalAmenities)
+                .Include(p=>p.AccessibilityAmenities)
                 .FirstOrDefaultAsync(p => p.PropertyId == id);
         }
 

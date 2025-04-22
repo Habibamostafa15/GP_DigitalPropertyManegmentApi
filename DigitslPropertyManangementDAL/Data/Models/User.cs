@@ -25,5 +25,6 @@
         public ICollection<UserPropertyFavorite> UserPropertyFavorites { get; set; }
         public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
         public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
+        public virtual ICollection<Property> UserProperties { get; set; }
     }
 }

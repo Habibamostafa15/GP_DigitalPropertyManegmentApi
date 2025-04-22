@@ -19,6 +19,9 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string Street { get; set; }
         public string City { get; set; }
         public string Governate { get; set; }
+        public int UserId { get; set; }
+        public string LocationUrl { get; set; }
+        public string ListingType { get; set; }
 
         public IEnumerable<IFormFile> Images { get; set; }
 

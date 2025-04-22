@@ -10,7 +10,7 @@ namespace DigitalPropertyManagementBLL.Interfaces
     public interface IReviewRepository
     {
         public Task<bool> AddReviewAsync(int userId, int propertyId, CreateReviewDto createReviewDto);
-        public Task<IEnumerable<ReviewReadDto>> GetReviewsForPropertyAsync(int propertyId);
+        //public Task<IEnumerable<ReviewReadDto>> GetReviewsForPropertyAsync(int propertyId);
         public Task<bool> UpdateReviewAsync(int userId, int propertyId, UpdateReviewDto updateReviewDto);
         public Task<bool> RemoveReviewAsync(int userId, int propertyId);
     }
