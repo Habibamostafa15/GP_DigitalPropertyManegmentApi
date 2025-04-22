@@ -90,6 +90,7 @@ namespace GP_DigitalPropertyManegmentApi
             app.MapControllers();
 
             app.Run();
+
         }
     }
 }
