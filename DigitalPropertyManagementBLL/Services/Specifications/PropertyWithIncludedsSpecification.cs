@@ -28,7 +28,14 @@ namespace DigitalPropertyManagementBLL.Services.Specifications
             ApplyPagination(specParams.PageIndex,specParams.PageSize);
         }
 
-
+        public PropertyWithIncludedsSpecification(string city) 
+            : base
+            (
+                  p => p.City.Trim().ToLower() == city.Trim().ToLower()
+            )
+        {
+            ApplyIncludes();
+        }
         private void ApplySort(string? sort)
         {
             if (!string.IsNullOrEmpty(sort))
