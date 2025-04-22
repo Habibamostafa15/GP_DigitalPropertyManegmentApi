@@ -12,6 +12,11 @@ namespace DigitalPropertyManagementBLL.Dtos
         public int? Bedrooms { get; set; }
         public int? Bathrooms { get; set; }
         public string? SortBy { get; set; }
+        public double? Size { get; set; }
+
+        public double? MaxPrice { get; set; }
+        public double? MinPrice { get; set; }
+
 
         private int pageIndex = 1;
         private int pageSize = 5;
