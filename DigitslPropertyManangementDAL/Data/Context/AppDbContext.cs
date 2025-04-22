@@ -144,6 +144,8 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
                     Governate = "Cairo",
                     Latitude = 30.0489,
                     Longitude = 31.3462
+
+
                 },
 
                 new Property
