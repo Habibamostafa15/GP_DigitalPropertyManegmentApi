@@ -10,6 +10,8 @@ namespace DigitalPropertyManagementBLL.Dtos
     {
         public string? PropertyType { get; set; }
         public string? City { get; set; }
+        public string? Governate { get; set; }
+
         public int? Bedrooms { get; set; }
         public int? Bathrooms { get; set; }
         public string? SortBy { get; set; }
