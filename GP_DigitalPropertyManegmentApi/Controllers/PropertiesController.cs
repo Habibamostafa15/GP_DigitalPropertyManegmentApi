@@ -1,9 +1,14 @@
-﻿using DigitalPropertyManagementBLL.Dtos;
+﻿using AutoMapper;
+using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
+using DigitalPropertyManagementBLL.Services;
 using GP_DigitalPropertyManegmentApi.Data.Context;
 using GP_DigitalPropertyManegmentApi.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GP_DigitalPropertyManegmentApi.Controllers
 {
@@ -12,13 +17,17 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
     public class PropertiesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IServicesManager servicesManager;
+        private readonly IServicesManager _servicesManager;
+        private readonly IUserService _userService;
+        private readonly IMapper mapper;
         private readonly IConfiguration configuration;
 
-        public PropertiesController(IUnitOfWork unitOfWork, IServicesManager servicesManager, IConfiguration configuration)
+        public PropertiesController(IUnitOfWork unitOfWork, IServicesManager servicesManager, IUserService userService, IMapper mapper, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
-            this.servicesManager = servicesManager;
+            _servicesManager = servicesManager;
+            _userService = userService;
+            this.mapper = mapper;
             this.configuration = configuration;
         }
 
@@ -48,8 +57,67 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllProperty([FromQuery] PropertySpecificationsParameters specParams)
         {
-            var properties = await servicesManager.PropertyServices.GetAllAsync(specParams);
+            var properties = await _servicesManager.PropertyServices.GetAllAsync(specParams);
             return Ok(properties);
+        }
+
+        #region Recommend without PaginationResponse
+        //[HttpGet("Recommend")]
+        //public async Task<IActionResult> RecommendProperties()
+        //{
+        //    var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+        //    if (string.IsNullOrWhiteSpace(email))
+        //        return Unauthorized("Email not found in user claims.");
+
+        //    var user = await _userService.GetUserByEmailAsync(email);
+
+        //    if (user == null)
+        //        return NotFound("User not found.");
+
+        //    if (string.IsNullOrWhiteSpace(user.City))
+        //        return BadRequest("User does not have a city set in their profile.");
+
+        //    var properties = await _unitOfWork.Properties.GetPropertiesByCityAsync(user.City);
+
+        //    var recommended = properties.Select(p => new PropertiesReadDto
+        //    {
+        //        PropertyId = p.PropertyId,
+        //        Title = p.Title,
+        //        Description = p.Description,
+        //        Price = p.Price,
+        //        Size = p.Size,
+        //        Street = p.Street,
+        //        City = p.City,
+        //        Governate = p.Governate,
+        //        PropertyType = p.PropertyType,
+        //        Bedrooms = p.Bedrooms,
+        //        Bathrooms = p.Bathrooms,
+        //        ListedAt = p.ListedAt,
+        //        PropertyImages = p.PropertyImages
+        //    });
+
+        //    return Ok(recommended);
+        //} 
+        #endregion
+
+        [HttpGet("Recommend")]
+        public async Task<IActionResult> RecommendProperties(int pageIndex = 1, int pageSize = 5)
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrWhiteSpace(email)) 
+                return Unauthorized("Email not found in user claims.");
+
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user == null) return NotFound("User not found.");
+
+            if (string.IsNullOrWhiteSpace(user.City))
+                return BadRequest("User does not have a city set in their profile.");
+            var recommended = await _servicesManager.PropertyServices.GetPropertiesByCityAsync(user.City, pageIndex, pageSize);
+
+            return Ok(recommended);
         }
 
         [HttpGet("GetById/{id:int}")]
@@ -157,7 +225,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             var imagesPath = DocumentSettings.UploadFiles(propertyDto.Images, "images");
             foreach (var image in imagesPath)
             {
-                newProperty.PropertyImages.Add(new PropertyImage() 
+                newProperty.PropertyImages.Add(new PropertyImage()
                 { ImageUrl = $"{configuration["BaseUrl"]}/files/images/{image}", PropertyId = newProperty.PropertyId });
             }
 
@@ -209,6 +277,10 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             return Ok($"Property with ID {id} was deleted.");
         }
+
+
+
+
 
     }
 }

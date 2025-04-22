@@ -22,5 +22,14 @@ namespace DigitalPropertyManagementBLL.Services.Specifications
 
         }
 
+        public PropertyWithCountSpecification(string city)
+           : base
+            (
+              p => p.City.Trim().ToLower() == city.Trim().ToLower()
+            )
+        {
+
+        }
+
     }
 }
