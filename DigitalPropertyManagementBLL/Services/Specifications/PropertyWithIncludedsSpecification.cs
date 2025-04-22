@@ -19,6 +19,7 @@ namespace DigitalPropertyManagementBLL.Services.Specifications
             (
                   p =>
                   (string.IsNullOrEmpty(specParams.PropertyType) || p.PropertyType.ToLower().Contains(specParams.PropertyType.ToLower())) &&
+                  (string.IsNullOrEmpty(specParams.City) || p.City.ToLower().Contains(specParams.City.ToLower())) &&
                   (!specParams.Size.HasValue || p.Size == specParams.Size) &&
                   (!specParams.MaxPrice.HasValue || p.Price <= specParams.MaxPrice) &&
                   (!specParams.MinPrice.HasValue || p.Price >= specParams.MinPrice) &&
