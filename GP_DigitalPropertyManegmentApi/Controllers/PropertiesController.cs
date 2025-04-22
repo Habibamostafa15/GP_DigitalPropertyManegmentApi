@@ -128,7 +128,42 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             {
                 return NotFound("Invalid Id!");
             }
-            return Ok(property);
+
+            PropertyDetailsDto propertyDto = new PropertyDetailsDto
+            {
+                PropertyId = property.PropertyId,
+                Title = property.Title,
+                Description = property.Description,
+                Price = property.Price,
+                Bedrooms = property.Bedrooms,
+                Bathrooms = property.Bathrooms,
+                PropertyType = property.PropertyType,
+                ListedAt = property.ListedAt,
+                LocationUrl=property.LocationUrl,
+                ListingType=property.ListingType,
+
+                ImageUrls = property.PropertyImages?.Select(img => img.ImageUrl).ToList(),
+                ExternalAmenities = property.ExternalAmenities?.Select(a=>a.Name).ToList(),
+                InternalAmenities = property.InternalAmenities?.Select(a=>a.Name).ToList(),
+                AccessibilityAmenities = property.AccessibilityAmenities?.Select(a=>a.Name).ToList(),
+                Reviews = property.UserPropertyReviews?.Select(r => new ReviewReadDto
+                {
+                    ReviewerName = r.User?.FirstName + " " + r.User?.LastName,
+                    Comment = r.Review.Comment,
+                    Rating = r.Review.Rating,
+                    CreatedAt = r.Review.CreatedAt
+                }).ToList(),
+
+                OwnerInfo = new OwnerInfoDto
+                {
+                    FirstName = property.User.FirstName,
+                    LastName = property.User.LastName,
+                    Email = property.User.Email,
+                    PhoneNumber = property.User.PhoneNumber
+                }
+            };
+
+            return Ok(propertyDto);
         }
 
 
@@ -219,6 +254,9 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 City = propertyDto.City,
                 Governate = propertyDto.Governate,
                 Price = propertyDto.Price,
+                UserId=propertyDto.UserId,
+                LocationUrl = propertyDto.LocationUrl,
+                ListingType = propertyDto.ListingType,
                 ListedAt = DateTime.UtcNow,
 
             };
@@ -252,6 +290,9 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             existing.City = updateDto.City;
             existing.Governate = updateDto.Governate;
             existing.Price = updateDto.Price;
+            existing.UserId=updateDto.UserId;
+            existing.LocationUrl=updateDto.LocationUrl;
+            existing.ListingType=updateDto.ListingType;
 
             _unitOfWork.Properties.Update(existing);
             await _unitOfWork.SaveAllAsync();

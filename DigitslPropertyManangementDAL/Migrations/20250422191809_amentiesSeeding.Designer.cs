@@ -4,6 +4,7 @@ using GP_DigitalPropertyManegmentApi.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitslPropertyManangementDAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250422191809_amentiesSeeding")]
+    partial class amentiesSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace DigitslPropertyManangementDAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AccessibillityAmenityProperty", b =>
+                {
+                    b.Property<int>("AccessibillityAmenitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertiesPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AccessibillityAmenitiesId", "PropertiesPropertyId");
+
+                    b.HasIndex("PropertiesPropertyId");
+
+                    b.ToTable("AccessibillityAmenityProperty");
+                });
 
             modelBuilder.Entity("AmenityProperty", b =>
                 {
@@ -265,6 +283,21 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Id = 10,
                             Name = "Soundproof Walls"
                         });
+                });
+
+            modelBuilder.Entity("ExternalAmenityProperty", b =>
+                {
+                    b.Property<int>("ExternalAmenitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertiesPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExternalAmenitiesId", "PropertiesPropertyId");
+
+                    b.HasIndex("PropertiesPropertyId");
+
+                    b.ToTable("ExternalAmenityProperty");
                 });
 
             modelBuilder.Entity("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", b =>
@@ -512,7 +545,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0444,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4813),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6019),
                             ListingType = "sale",
                             Longitude = 31.235700000000001,
                             Price = 5000.0,
@@ -534,7 +567,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.976500000000001,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4819),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6030),
                             ListingType = "rent",
                             Longitude = 31.1313,
                             Price = 15000.0,
@@ -556,7 +589,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.200099999999999,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4824),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6034),
                             ListingType = "sale",
                             Longitude = 29.918700000000001,
                             Price = 3000.0,
@@ -578,7 +611,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Dakahlia",
                             IsAvailable = false,
                             Latitude = 31.0364,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4827),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6037),
                             ListingType = "sale",
                             Longitude = 31.380700000000001,
                             Price = 6000.0,
@@ -600,7 +633,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.0489,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4830),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6041),
                             ListingType = "rent",
                             Longitude = 31.3462,
                             Price = 20000.0,
@@ -622,7 +655,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Giza",
                             IsAvailable = true,
                             Latitude = 29.9876,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4834),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6047),
                             ListingType = "rent",
                             Longitude = 31.2134,
                             Price = 2500.0,
@@ -644,7 +677,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Alexandria",
                             IsAvailable = true,
                             Latitude = 31.215599999999998,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4837),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6088),
                             ListingType = "sale",
                             Longitude = 29.955300000000001,
                             Price = 3500.0,
@@ -666,7 +699,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Cairo",
                             IsAvailable = true,
                             Latitude = 30.008099999999999,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4840),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6092),
                             ListingType = "rent",
                             Longitude = 31.230599999999999,
                             Price = 10000.0,
@@ -688,7 +721,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Gharbia",
                             IsAvailable = true,
                             Latitude = 30.788499999999999,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4874),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6097),
                             ListingType = "sale",
                             Longitude = 31.001899999999999,
                             Price = 4000.0,
@@ -710,7 +743,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                             Governate = "Red Sea",
                             IsAvailable = true,
                             Latitude = 27.257899999999999,
-                            ListedAt = new DateTime(2025, 4, 22, 20, 11, 6, 651, DateTimeKind.Utc).AddTicks(4879),
+                            ListedAt = new DateTime(2025, 4, 22, 19, 18, 9, 0, DateTimeKind.Utc).AddTicks(6102),
                             ListingType = "rent",
                             Longitude = 33.811599999999999,
                             Price = 25000.0,
@@ -908,460 +941,34 @@ namespace DigitslPropertyManangementDAL.Migrations
                     b.ToTable("UserPropertyReviews");
                 });
 
-            modelBuilder.Entity("PropertyAccessibilityAmenities", b =>
+            modelBuilder.Entity("InternalAmenityProperty", b =>
                 {
-                    b.Property<int>("PropertiesPropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccessibilityAmenitiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertiesPropertyId", "AccessibilityAmenitiesId");
-
-                    b.HasIndex("AccessibilityAmenitiesId");
-
-                    b.ToTable("PropertyAccessibilityAmenities");
-
-                    b.HasData(
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            AccessibilityAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            AccessibilityAmenitiesId = 4
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            AccessibilityAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            AccessibilityAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            AccessibilityAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            AccessibilityAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            AccessibilityAmenitiesId = 10
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            AccessibilityAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            AccessibilityAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            AccessibilityAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            AccessibilityAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            AccessibilityAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            AccessibilityAmenitiesId = 4
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            AccessibilityAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            AccessibilityAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            AccessibilityAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            AccessibilityAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            AccessibilityAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            AccessibilityAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            AccessibilityAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            AccessibilityAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            AccessibilityAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            AccessibilityAmenitiesId = 8
-                        });
-                });
-
-            modelBuilder.Entity("PropertyExternalAmenities", b =>
-                {
-                    b.Property<int>("PropertiesPropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ExternalAmenitiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertiesPropertyId", "ExternalAmenitiesId");
-
-                    b.HasIndex("ExternalAmenitiesId");
-
-                    b.ToTable("PropertyExternalAmenities");
-
-                    b.HasData(
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            ExternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            ExternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            ExternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            ExternalAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            ExternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            ExternalAmenitiesId = 10
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            ExternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            ExternalAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            ExternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            ExternalAmenitiesId = 4
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            ExternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            ExternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            ExternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            ExternalAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            ExternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            ExternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            ExternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            ExternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            ExternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            ExternalAmenitiesId = 4
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            ExternalAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            ExternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            ExternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            ExternalAmenitiesId = 10
-                        });
-                });
-
-            modelBuilder.Entity("PropertyInternalAmenities", b =>
-                {
-                    b.Property<int>("PropertiesPropertyId")
-                        .HasColumnType("int");
-
                     b.Property<int>("InternalAmenitiesId")
                         .HasColumnType("int");
 
-                    b.HasKey("PropertiesPropertyId", "InternalAmenitiesId");
+                    b.Property<int>("PropertiesPropertyId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("InternalAmenitiesId");
+                    b.HasKey("InternalAmenitiesId", "PropertiesPropertyId");
 
-                    b.ToTable("PropertyInternalAmenities");
+                    b.HasIndex("PropertiesPropertyId");
 
-                    b.HasData(
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            InternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 1,
-                            InternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            InternalAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            InternalAmenitiesId = 4
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 2,
-                            InternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 3,
-                            InternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            InternalAmenitiesId = 3
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            InternalAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 4,
-                            InternalAmenitiesId = 10
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            InternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            InternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            InternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 5,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 6,
-                            InternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            InternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 7,
-                            InternalAmenitiesId = 9
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            InternalAmenitiesId = 6
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 8,
-                            InternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            InternalAmenitiesId = 2
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            InternalAmenitiesId = 5
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 9,
-                            InternalAmenitiesId = 10
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            InternalAmenitiesId = 1
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            InternalAmenitiesId = 7
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            InternalAmenitiesId = 8
-                        },
-                        new
-                        {
-                            PropertiesPropertyId = 10,
-                            InternalAmenitiesId = 9
-                        });
+                    b.ToTable("InternalAmenityProperty");
+                });
+
+            modelBuilder.Entity("AccessibillityAmenityProperty", b =>
+                {
+                    b.HasOne("DigitslPropertyManangementDAL.Data.Models.AccessibillityAmenity", null)
+                        .WithMany()
+                        .HasForeignKey("AccessibillityAmenitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", null)
+                        .WithMany()
+                        .HasForeignKey("PropertiesPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AmenityProperty", b =>
@@ -1369,6 +976,21 @@ namespace DigitslPropertyManangementDAL.Migrations
                     b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Amenity", null)
                         .WithMany()
                         .HasForeignKey("AmenitiesAmenityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", null)
+                        .WithMany()
+                        .HasForeignKey("PropertiesPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExternalAmenityProperty", b =>
+                {
+                    b.HasOne("DigitslPropertyManangementDAL.Data.Models.ExternalAmenity", null)
+                        .WithMany()
+                        .HasForeignKey("ExternalAmenitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1537,37 +1159,7 @@ namespace DigitslPropertyManangementDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PropertyAccessibilityAmenities", b =>
-                {
-                    b.HasOne("DigitslPropertyManangementDAL.Data.Models.AccessibillityAmenity", null)
-                        .WithMany()
-                        .HasForeignKey("AccessibilityAmenitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PropertyExternalAmenities", b =>
-                {
-                    b.HasOne("DigitslPropertyManangementDAL.Data.Models.ExternalAmenity", null)
-                        .WithMany()
-                        .HasForeignKey("ExternalAmenitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GP_DigitalPropertyManegmentApi.Data.Context.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PropertyInternalAmenities", b =>
+            modelBuilder.Entity("InternalAmenityProperty", b =>
                 {
                     b.HasOne("DigitslPropertyManangementDAL.Data.Models.InternalAmenity", null)
                         .WithMany()

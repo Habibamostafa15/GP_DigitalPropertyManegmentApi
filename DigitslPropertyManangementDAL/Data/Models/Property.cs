@@ -33,6 +33,10 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         [Required]
         public bool IsAvailable { get; set; }
         [Required]
+       public string ListingType {  get; set; }
+
+        public string? LocationUrl {  get; set; }
+        [Required]
         public DateTime ListedAt { get; set; } = DateTime.UtcNow;
         // Address Information
         [Required]
@@ -48,9 +52,15 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         [Required]
         public double Longitude { get; set; }
 
+
         //Navigation Properties
         // OneToMany With PropertyImage
         public ICollection<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
+
+        // OneToMany With User
+        public int ?UserId { get; set; }
+        public virtual User User { get; set; }
+
 
         //ManyToMany
         public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
@@ -58,6 +68,9 @@ namespace GP_DigitalPropertyManegmentApi.Data.Context
         public ICollection<UserPropertyFavorite> UserPropertyFavorites { get; set; }
         public ICollection<UserPropertyPayment> UserPropertyPayments { get; set; }
         public ICollection<UserPropertyDocument> UserPropertyDocuments { get; set; }
+        public virtual ICollection<AccessibillityAmenity> AccessibilityAmenities { get; set; } = new List<AccessibillityAmenity>();
+        public virtual ICollection<ExternalAmenity> ExternalAmenities { get; set; } = new List<ExternalAmenity>();
+        public virtual ICollection<InternalAmenity> InternalAmenities { get; set; } = new List<InternalAmenity>();
 
     }
 }

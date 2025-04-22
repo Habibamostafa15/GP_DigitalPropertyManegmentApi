@@ -49,21 +49,21 @@ namespace DigitalPropertyManagementBLL.Repositories
 
         }
 
-        public async Task<IEnumerable<ReviewReadDto>> GetReviewsForPropertyAsync(int propertyId)
-        {
-            var propertyReviews = _context.UserPropertyReviews
-                .Where(r => r.PropertyId == propertyId)
-                .Select(r => new ReviewReadDto
-                {
-                    ReviewId = r.Review.ReviewId,
-                    Rating = r.Review.Rating,
-                    Comment = r.Review.Comment,
-                    CreatedAt = r.Review.CreatedAt
-                })
-                .ToListAsync();
+        //public async Task<IEnumerable<ReviewReadDto>> GetReviewsForPropertyAsync(int propertyId)
+        //{
+        //    var propertyReviews = _context.UserPropertyReviews
+        //        .Where(r => r.PropertyId == propertyId)
+        //        .Select(r => new ReviewReadDto
+        //        {
+                  
+        //            Rating = r.Review.Rating,
+        //            Comment = r.Review.Comment,
+        //            CreatedAt = r.Review.CreatedAt
+        //        })
+        //        .ToListAsync();
 
-            return await propertyReviews;
-        }
+        //    return await propertyReviews;
+        //}
 
         public async Task<bool> RemoveReviewAsync(int userId, int propertyId)
         {
