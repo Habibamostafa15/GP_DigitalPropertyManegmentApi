@@ -10,6 +10,6 @@ namespace DigitalPropertyManagementBLL.Interfaces
     public interface IPropertyServices
     {
         Task<paginationResponse<PropertyResponseDto>> GetAllAsync(PropertySpecificationsParameters specParams);
-        Task<paginationResponse<PropertiesReadDto>> GetPropertiesByCityAsync(string city, int pageIndex, int pageSize);
+        Task<paginationResponse<PropertyResponseDto>> GetPropertiesByCityAsync(string city, int pageIndex, int pageSize);
     }
 }
