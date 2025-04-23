@@ -24,5 +24,9 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string Governate { get; set; }
         public DateTime ListedAt { get; set; } = DateTime.UtcNow;
         public ICollection<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
+
+        public List<string> InternalAmenities { get; set; }
+        public List<string> ExternalAmenities { get; set; }
+        public List<string> AccessibilityAmenities { get; set; }
     }
 }
