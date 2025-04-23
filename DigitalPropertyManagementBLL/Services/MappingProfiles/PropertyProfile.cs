@@ -13,7 +13,7 @@ namespace DigitalPropertyManagementBLL.Services.MappingProfiles
     {
         public PropertyProfile()
         {
-            //CreateMap<Property, PropertiesReadDto>();
+            CreateMap<Property, PropertiesReadDto>();
 
             CreateMap<Property, PropertyResponseDto>()
                 .ForMember(dest => dest.PropertyImages,

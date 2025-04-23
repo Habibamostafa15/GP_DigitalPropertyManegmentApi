@@ -28,7 +28,7 @@ namespace DigitalPropertyManagementBLL.Services
 
         }
 
-        public async Task<paginationResponse<PropertiesReadDto>> GetPropertiesByCityAsync(string city, int pageIndex, int pageSize)
+        public async Task<paginationResponse<PropertyResponseDto>> GetPropertiesByCityAsync(string city, int pageIndex, int pageSize)
         {
             var spec = new PropertyWithIncludedsSpecification(city);
             var properties = await unitOfWork.GetRepository<Property>().GetAllAsync(spec);
@@ -36,9 +36,9 @@ namespace DigitalPropertyManagementBLL.Services
             var specCount = new PropertyWithCountSpecification(city);
             var count = await unitOfWork.GetRepository<Property>().CountAsync(specCount);
 
-            var result = mapper.Map<IEnumerable<PropertiesReadDto>>(properties);
+            var result = mapper.Map<IEnumerable<PropertyResponseDto>>(properties);
 
-            return new paginationResponse<PropertiesReadDto>(pageIndex, pageSize, count, result);
+            return new paginationResponse<PropertyResponseDto>(pageIndex, pageSize, count, result);
         }
     }
 }
