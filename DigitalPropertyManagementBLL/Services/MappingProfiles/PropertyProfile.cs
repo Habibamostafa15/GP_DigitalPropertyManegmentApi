@@ -15,13 +15,15 @@ namespace DigitalPropertyManagementBLL.Services.MappingProfiles
         {
             //CreateMap<Property, PropertiesReadDto>();
 
-            CreateMap<Property, PropertiesReadDto>()
+            CreateMap<Property, PropertyResponseDto>()
+                .ForMember(dest => dest.PropertyImages,
+                    opt => opt.MapFrom(src => src.PropertyImages.Select(p => p.ImageUrl)))
                 .ForMember(dest => dest.InternalAmenities,
-                    opt => opt.MapFrom(src => src.InternalAmenities.Select(a => a.Name)))
+                    opt => opt.MapFrom(src => src.InternalAmenities.Select(p => p.Name)))
                 .ForMember(dest => dest.ExternalAmenities,
-                    opt => opt.MapFrom(src => src.ExternalAmenities.Select(a => a.Name)))
+                    opt => opt.MapFrom(src => src.ExternalAmenities.Select(p => p.Name)))
                 .ForMember(dest => dest.AccessibilityAmenities,
-                    opt => opt.MapFrom(src => src.AccessibilityAmenities.Select(a => a.Name)));
+                    opt => opt.MapFrom(src => src.AccessibilityAmenities.Select(p => p.Name)));
         }
     }
 }
