@@ -105,7 +105,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         public async Task<IActionResult> RecommendProperties(int pageIndex = 1, int pageSize = 5)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-
+            
             if (string.IsNullOrWhiteSpace(email)) 
                 return Unauthorized("Email not found in user claims.");
 
@@ -120,9 +120,18 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok(recommended);
         }
 
+        
         [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetPropertyById([FromRoute] int id)
         {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrWhiteSpace(email))
+                return Unauthorized("Email not found in user claims.");
+
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user == null) return NotFound("User not found.");
             var property = await _unitOfWork.Properties.GetDetails(id);
             if (property == null)
             {
@@ -236,11 +245,20 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok(propertiesRead);
         }
 
+    
         [HttpPost("Create")]
         public async Task<IActionResult> CreateProperty([FromForm] PropertyCreateDto propertyDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrWhiteSpace(email))
+                return Unauthorized("Email not found in user claims.");
+
+            var user = await _userService.GetUserByEmailAsync(email); 
+            if (user == null)
+                return NotFound("User not found.");
 
             var newProperty = new Property
             {
@@ -254,7 +272,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 City = propertyDto.City,
                 Governate = propertyDto.Governate,
                 Price = propertyDto.Price,
-                UserId=propertyDto.UserId,
+                UserId=user.UserId,
                 LocationUrl = propertyDto.LocationUrl,
                 ListingType = propertyDto.ListingType,
                 ListedAt = DateTime.UtcNow,
@@ -294,7 +312,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             existing.LocationUrl=updateDto.LocationUrl;
             existing.ListingType=updateDto.ListingType;
 
-            _unitOfWork.Properties.Update(existing);
+            _unitOfWork.Properties.Update(existing); 
             await _unitOfWork.SaveAllAsync();
 
             return NoContent();
