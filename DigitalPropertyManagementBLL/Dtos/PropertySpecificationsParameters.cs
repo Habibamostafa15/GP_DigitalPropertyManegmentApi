@@ -21,6 +21,11 @@ namespace DigitalPropertyManagementBLL.Dtos
         public double? MinPrice { get; set; }
 
 
+        public List<int>? InternalAmenityIds { get; set; }
+        public List<int>? ExternalAmenityIds { get; set; }
+        public List<int>? AccessibilityAmenityIds { get; set; }
+
+
         private int pageIndex = 1;
         private int pageSize = 5;
 
