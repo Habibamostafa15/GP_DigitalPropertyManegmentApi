@@ -81,6 +81,7 @@ namespace DigitalPropertyManagementBLL.Services.Specifications
         private void ApplyIncludes()
         {
             AddInclude(p => p.PropertyImages);
+            AddInclude(p => p.User);
             //AddInclude(p => p.Amenities);
             AddInclude(p => p.InternalAmenities);
             AddInclude(p => p.ExternalAmenities);

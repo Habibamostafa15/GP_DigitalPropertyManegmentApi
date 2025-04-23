@@ -21,8 +21,9 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string City { get; set; }
         public string Governate { get; set; }
         public DateTime ListedAt { get; set; } = DateTime.UtcNow;
-        public IEnumerable<string> PropertyImages { get; set; } 
+        public IEnumerable<string> PropertyImages { get; set; }
 
+        public OwnerInfoDto OwnerInfo { get; set; }
         public List<string> InternalAmenities { get; set; }
         public List<string> ExternalAmenities { get; set; }
         public List<string> AccessibilityAmenities { get; set; }
