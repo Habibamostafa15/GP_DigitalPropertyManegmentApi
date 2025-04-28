@@ -8,6 +8,7 @@ namespace DigitalPropertyManagementBLL.Interfaces
     {
         Task<bool> RegisterUserAsync(UserDTO userDto);
         Task<bool> LoginAsync(LoginDTO loginDto);
+        Task<UserResultDto> Login(LoginDTO loginDto);
         Task<User?> GetUserByEmailAsync(string email);
         Task<string> GenerateOtpAsync(string email);
         Task<(bool Success, string Message)> VerifyOtpAsync(string email, string enteredOtp);

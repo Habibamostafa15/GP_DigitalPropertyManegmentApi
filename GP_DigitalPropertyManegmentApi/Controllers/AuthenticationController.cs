@@ -94,25 +94,29 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                     return Unauthorized(new { Status = "Error", Message = "Your account is not verified. Please verify your email with the OTP sent to you." });
                 }
 
-                var result = await _userService.LoginAsync(loginDto);
-                if (!result)
-                {
-                    _logger.LogWarning($"Login failed for email: {loginDto.Email}. Invalid email or password.");
-                    return Unauthorized(new { Status = "Error", Message = "Invalid email or password. Please check your credentials and try again." });
-                }
+                var userResult = await _userService.Login(loginDto);
+                if (userResult is null) throw new Exception();
+                
+                return Ok(userResult);
+                //var result = await _userService.LoginAsync(loginDto);
+                //if (!result)
+                //{
+                //    _logger.LogWarning($"Login failed for email: {loginDto.Email}. Invalid email or password.");
+                //    return Unauthorized(new { Status = "Error", Message = "Invalid email or password. Please check your credentials and try again." });
+                //}
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
+                //var claims = new List<Claim>
+                //{
+                //    new Claim(ClaimTypes.Email, user.Email),
+                //    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+                //};
+                //var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                //var principal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                _logger.LogInformation($"User with email {loginDto.Email} logged in successfully.");
-                return Ok(new { Status = "Success", Message = "Login successful." });
+                //_logger.LogInformation($"User with email {loginDto.Email} logged in successfully.");
+                //return Ok(new { Status = "Success", Message = "Login successful." });
             }
             catch (Exception ex)
             {
