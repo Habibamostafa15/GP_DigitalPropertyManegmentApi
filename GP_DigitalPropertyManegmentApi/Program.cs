@@ -71,21 +71,22 @@ namespace GP_DigitalPropertyManegmentApi
                 {
                     ValidateIssuer = true,
                     ValidateLifetime = true,
+                    ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
 
                     ValidIssuer = "http://digitalpropertyapi.runasp.net",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SymmetrisdcSecurityKeyasfasfasfasfasfasfffasfasgbEncoding.UTF8.GetBytes"))
                 };
-            })
-            .AddGoogle(options =>
-            {
-                options.ClientId = "19324655100-27k3987q8sbg46u7566a2fqhoq8ks1ph.apps.googleusercontent.com";
-                options.ClientSecret = "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";
-                options.CallbackPath = "/api/authorization/google-response";
-                options.SaveTokens = true;
-                options.Scope.Add("profile");
-                options.Scope.Add("email");
             });
+            //.AddGoogle(options =>
+            //{
+            //    options.ClientId = "19324655100-27k3987q8sbg46u7566a2fqhoq8ks1ph.apps.googleusercontent.com";
+            //    options.ClientSecret = "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";
+            //    options.CallbackPath = "/api/authorization/google-response";
+            //    options.SaveTokens = true;
+            //    options.Scope.Add("profile");
+            //    options.Scope.Add("email");
+            //});
 
             var app = builder.Build();
 
