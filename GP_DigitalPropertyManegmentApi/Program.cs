@@ -5,8 +5,12 @@ using DigitalPropertyManagementBLL.Services;
 using GP_DigitalPropertyManegmentApi.Data.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace GP_DigitalPropertyManegmentApi
 {
@@ -16,22 +20,22 @@ namespace GP_DigitalPropertyManegmentApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-           
+
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 });
 
-            
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-           
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", builder =>
@@ -42,7 +46,7 @@ namespace GP_DigitalPropertyManegmentApi
                 });
             });
 
-            
+
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -53,19 +57,25 @@ namespace GP_DigitalPropertyManegmentApi
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IServicesManager, ServicesManager>();
 
-            
+
             builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddCookie(options =>
+            .AddJwtBearer(options =>
             {
-                options.LoginPath = "/api/authorization/login";
-                options.LogoutPath = "/api/authorization/logout";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = "http://digitalpropertyapi.runasp.net",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SymmetrisdcSecurityKeyasfasfasfasfasfasfffasfasgbEncoding.UTF8.GetBytes"))
+                };
             })
             .AddGoogle(options =>
             {
@@ -84,7 +94,7 @@ namespace GP_DigitalPropertyManegmentApi
             app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
-            app.UseAuthentication(); 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

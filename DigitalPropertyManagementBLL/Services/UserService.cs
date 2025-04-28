@@ -2,7 +2,12 @@
 using DigitalPropertyManagementBLL.Interfaces;
 using GP_DigitalPropertyManegmentApi.Data.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Management;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DigitalPropertyManagementBLL.Services
@@ -340,6 +345,45 @@ namespace DigitalPropertyManagementBLL.Services
                 user = await _userRepository.GetUserByEmailAsync(email.ToLower());
             }
             return user;
+        }
+
+        public async Task<UserResultDto> Login(LoginDTO loginDto)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(loginDto.Email);
+            if (user == null) return null;
+            var flag = _passwordHasher.VerifyHashedPassword(null, user.PasswordHash, loginDto.Password);
+            if (flag != PasswordVerificationResult.Success) return null;
+
+            return new UserResultDto
+            {
+                DisplayName = $"{user.FirstName} {user.LastName}",
+                Email = loginDto.Email,
+                Token = await GenerateJwtToken(user)
+            };
+            
+        }
+
+        public async Task<string> GenerateJwtToken(User user)
+        {
+
+            var userClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SymmetrisdcSecurityKeyasfasfasfasfasfasfffasfasgbEncoding.UTF8.GetBytes"));
+
+
+            var token = new JwtSecurityToken(
+                issuer: "http://digitalpropertyapi.runasp.net",
+                claims: userClaims,
+                expires: DateTime.UtcNow.AddDays(7),
+                signingCredentials: new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature)
+
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
