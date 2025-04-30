@@ -1,6 +1,7 @@
 ﻿using DigitalPropertyManagementBLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GP_DigitalPropertyManegmentApi.Controllers
 {
@@ -14,9 +15,21 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpPost("{userId}/favorite/{propertyId}")]
-        public async Task<IActionResult> AddToFavorites([FromRoute] int propertyId, [FromRoute] int userId)
+        [HttpPost("{propertyId:int}")]
+        public async Task<IActionResult> AddToFavorites([FromRoute] int propertyId)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userIdClaim))
+            {
+                return Unauthorized("User ID not found in claims.");
+            }
+
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
+                
             var success = await _unitOfWork.Favorites.AddToFavoritesAsync(propertyId, userId);
             if (!success)
             {
@@ -25,24 +38,57 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok("Property added to favorites.");
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetFavoriteProperties([FromRoute]int userId)
+        [HttpGet()]
+        public async Task<IActionResult> GetFavoriteProperties()
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userIdClaim))
+            {
+                return Unauthorized("User ID not found in claims.");
+            }
+
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
             var properties = await _unitOfWork.Favorites.GetFavoritePropertiesAsync(userId);
             return Ok(properties);
 
         }
 
-        [HttpGet("{userId}/added/{propertyId}")]
-        public async Task<IActionResult> IsFavorite([FromRoute] int userId, [FromRoute] int propertyId)
+        [HttpGet("added/{propertyId}")]
+        public async Task<IActionResult> IsFavorite([FromRoute] int propertyId)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userIdClaim))
+            {
+                return Unauthorized("User ID not found in claims.");
+            }
+
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
             var isFav = await _unitOfWork.Favorites.IsFavoriteAsync(userId, propertyId);
             return Ok(isFav);
         }
 
-        [HttpDelete("{userId}/remove/{propertyId}")]
-        public async Task<IActionResult> RemoveFromFavorites(int userId, int propertyId)
+        [HttpDelete("remove/{propertyId}")]
+        public async Task<IActionResult> RemoveFromFavorites(int propertyId)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userIdClaim))
+            {
+                return Unauthorized("User ID not found in claims.");
+            }
+
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
             var success = await _unitOfWork.Favorites.RemoveFromFavoritesAsync(userId, propertyId);
             if (!success)
             {
