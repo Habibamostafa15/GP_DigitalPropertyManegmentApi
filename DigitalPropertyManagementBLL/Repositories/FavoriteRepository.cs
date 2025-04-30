@@ -32,7 +32,7 @@ namespace DigitalPropertyManagementBLL.Repositories
             };
 
             await _context.Favorites.AddAsync(addToFavorites);
-
+            await _context.SaveChangesAsync();
             var favorite = new UserPropertyFavorite
             {
                 UserId = userId,
@@ -41,44 +41,63 @@ namespace DigitalPropertyManagementBLL.Repositories
             };
 
             await _context.UserPropertyFavorites.AddAsync(favorite);
+            await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<IEnumerable<PropertyFavoriteDto>> GetFavoritePropertiesAsync(int userId)
         {
-            var favoriteProperties = await _context.UserPropertyFavorites
-                .Where(f => f.UserId == userId)
-                .Include(f => f.Property)
-                    .ThenInclude(p => p.PropertyImages)
-                .Select(f => f.Property)
-                .ToListAsync();
+            //var favoriteProperties = await _context.UserPropertyFavorites
+            //    .Where(f => f.UserId == userId)
+            //    .Include(f => f.Property)
+            //        .ThenInclude(p => p.PropertyImages)
+            //    .Select(f => f.Property)
+            //    .ToListAsync();
 
-            var favoritePropertyDtos = await _context.UserPropertyFavorites
-                .Where(f => f.UserId == userId)
-                .Include(f => f.Property)
-                    .ThenInclude(p => p.PropertyImages)
-                .Include(f => f.Favorite)
-                .Select(f => new PropertyFavoriteDto
-                {
-                    PropertyId = f.Property.PropertyId,
-                    Title = f.Property.Title,
-                    Description = f.Property.Description,
-                    Price = f.Property.Price,
-                    PropertyType = f.Property.PropertyType,
-                    Size = f.Property.Size,
-                    Bedrooms = f.Property.Bedrooms,
-                    Bathrooms = f.Property.Bathrooms,
-                    Street = f.Property.Street,
-                    City = f.Property.City,
-                    Governate = f.Property.Governate,
-                    ListedAt = f.Property.ListedAt,
-                    PropertyImages = f.Property.PropertyImages,
-                    AddedToFavoritesAt = f.Favorite.AddedAt
-                })
-                .ToListAsync();
+            //var favoritePropertyDtos = await _context.UserPropertyFavorites
+            //    .Where(f => f.UserId == userId)
+            //    .Include(f => f.Property)
+            //        .ThenInclude(p => p.PropertyImages)
+            //    .Include(f => f.Favorite)
+            //    .Select(f => new PropertyFavoriteDto
+            //    {
+            //        PropertyId = f.Property.PropertyId,
+            //        Title = f.Property.Title,
+            //        Description = f.Property.Description,
+            //        Price = f.Property.Price,
+            //        PropertyType = f.Property.PropertyType,
+            //        Size = f.Property.Size,
+            //        Bedrooms = f.Property.Bedrooms,
+            //        Bathrooms = f.Property.Bathrooms,
+            //        Street = f.Property.Street,
+            //        City = f.Property.City,
+            //        Governate = f.Property.Governate,
+            //        ListedAt = f.Property.ListedAt,
+            //        PropertyImages = f.Property.PropertyImages,
+            //        AddedToFavoritesAt = f.Favorite.AddedAt
+            //    })
+            //    .ToListAsync();
 
+        var properties=await _context.UserPropertyFavorites
+            .Where(f => f.UserId == userId)
+            .Include(f => f.Property)
+            .ThenInclude(p => p.PropertyImages)
+            .Include(f => f.Favorite)
+            .Select(f => new PropertyFavoriteDto
+            {
+                PropertyId = f.Property.PropertyId,
+                Title = f.Property.Title,
+                MainImageUrl = f.Property.PropertyImages.FirstOrDefault().ImageUrl,
+                City = f.Property.City,
+                Governate = f.Property.Governate,
+                Price = f.Property.Price,
+                ListingType = f.Property.ListingType,
+                AddedToFavoritesAt = f.Favorite.AddedAt
+            }).ToListAsync();
 
-            return favoritePropertyDtos;
+        return properties;
+
+          
         }
 
 
@@ -108,10 +127,13 @@ namespace DigitalPropertyManagementBLL.Repositories
                 if (favoriteRecord != null)
                 {
                     _context.Favorites.Remove(favoriteRecord);
+                    
                 }
             }
 
             _context.UserPropertyFavorites.Remove(favorite);
+            _context.SaveChanges();
+
 
             return true;
         }
