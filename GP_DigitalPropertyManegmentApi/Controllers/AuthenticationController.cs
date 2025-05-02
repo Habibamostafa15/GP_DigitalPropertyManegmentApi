@@ -96,7 +96,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
                 var userResult = await _userService.Login(loginDto);
                 if (userResult is null) throw new Exception();
-                
+
                 return Ok(userResult);
                 //var result = await _userService.LoginAsync(loginDto);
                 //if (!result)
@@ -400,6 +400,40 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         private bool IsValidEmail(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateUser(UserUpdateDto userDto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+            int id = int.Parse(userId.Value);
+            var flag = await _userService.UpdateUser(id, userDto);
+
+            return flag ? Ok(userDto) : BadRequest();
+        }
+
+        [HttpGet("GetUser")]
+        public async Task<IActionResult> GetUser()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (user == null) return Unauthorized();
+            var userId = int.Parse(user.Value);
+
+            var result = await _userService.GetUserByIdAsync(userId);
+            if (result == null) return NotFound();
+
+            var userDto = new UserUpdateDto
+            {
+                FirstName = result.FirstName,
+                LastName = result.LastName,
+                Email = result.Email,
+                PhoneNumber = result.PhoneNumber,
+                City = result.City
+            };
+
+
+            return Ok(userDto); 
         }
     }
 }
