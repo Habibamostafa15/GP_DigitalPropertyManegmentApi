@@ -1,4 +1,5 @@
-﻿using DigitalPropertyManagementBLL.Dtos;
+﻿using AutoMapper;
+using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
 using GP_DigitalPropertyManegmentApi.Data.Context;
 using Microsoft.AspNetCore.Identity;
@@ -386,6 +387,23 @@ namespace DigitalPropertyManagementBLL.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<bool> UpdateUser(int id, UserUpdateDto userDto)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null) return false;
+            
+            user.FirstName = userDto.FirstName;
+            user.LastName = userDto.LastName;
+            user.PhoneNumber = userDto.PhoneNumber;
+            user.Email = userDto.Email;
+            user.City = userDto.City;
+
+            
+            _userRepository.UpdateUser(user);
+
+            return true;
         }
     }
 }

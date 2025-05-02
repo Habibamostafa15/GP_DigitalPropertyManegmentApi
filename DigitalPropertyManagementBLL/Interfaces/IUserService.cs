@@ -17,5 +17,7 @@ namespace DigitalPropertyManagementBLL.Interfaces
         Task<(bool Success, string Reason)> ResendOtpAsync(string email, string purpose);
         Task<(bool Success, string Reason)> ResendEmailConfirmationOtpAsync(string email);
         Task<User> LoginWithGoogleAsync(string email, string firstName, string lastName);
+
+        Task<bool> UpdateUser(int id, UserUpdateDto userDto);
     }
 }

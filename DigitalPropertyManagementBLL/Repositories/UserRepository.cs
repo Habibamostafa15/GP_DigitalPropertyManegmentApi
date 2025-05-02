@@ -56,5 +56,16 @@ namespace DigitalPropertyManagementBLL.Repositories
             }
             return false;
         }
+
+        public void UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            _context.SaveChanges();
+        }
+
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
     }
 }
