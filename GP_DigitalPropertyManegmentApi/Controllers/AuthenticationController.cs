@@ -1,5 +1,6 @@
 ﻿using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
+using GP_DigitalPropertyManegmentApi.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GP_DigitalPropertyManegmentApi.Controllers
 {
@@ -19,11 +21,13 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILogger<AuthenticationController> _logger;
+        private readonly IConfiguration configuration;
 
-        public AuthenticationController(IUserService userService, ILogger<AuthenticationController> logger)
+        public AuthenticationController(IUserService userService, ILogger<AuthenticationController> logger, IConfiguration configuration)
         {
             _userService = userService;
             _logger = logger;
+            this.configuration = configuration;
         }
 
         [HttpPost("signup")]
@@ -403,14 +407,29 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateUser(UserUpdateDto userDto)
+        public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userId == null) return Unauthorized();
+
+            var ImagePath = DocumentSettings.UploadFile(userDto.Image, "UserImage");
+
+            userDto.ImageUrl = $"{configuration["BaseUrl"]}/files/UserImage/{ImagePath}";
+
             int id = int.Parse(userId.Value);
             var flag = await _userService.UpdateUser(id, userDto);
 
-            return flag ? Ok(userDto) : BadRequest();
+            var userResponse = new UserResponseDto
+            {
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                Email = userDto.Email,
+                PhoneNumber = userDto.PhoneNumber,
+                City = userDto.City,
+                ImageUrl = userDto.ImageUrl,
+            };
+
+            return flag ? Ok(userResponse) : BadRequest();
         }
 
         [HttpGet("GetUser")]
@@ -423,13 +442,14 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             var result = await _userService.GetUserByIdAsync(userId);
             if (result == null) return NotFound();
 
-            var userDto = new UserUpdateDto
+            var userDto = new UserResponseDto
             {
                 FirstName = result.FirstName,
                 LastName = result.LastName,
                 Email = result.Email,
                 PhoneNumber = result.PhoneNumber,
-                City = result.City
+                City = result.City,
+                ImageUrl = result.ImageUrl,
             };
 
 
