@@ -110,6 +110,12 @@ namespace DigitalPropertyManagementBLL.Services
             return await _userRepository.GetUserByEmailAsync(email.ToLower());
         }
 
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            var result = await _userRepository.GetUserByIdAsync(id);
+            return result;
+        }
+
         public async Task<string> GenerateOtpAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email.ToLower());
