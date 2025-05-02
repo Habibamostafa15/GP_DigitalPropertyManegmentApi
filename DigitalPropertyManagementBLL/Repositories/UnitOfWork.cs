@@ -15,6 +15,9 @@ namespace DigitalPropertyManagementBLL.Repositories
         public IFavoriteRepository Favorites { get; private set; }
         public IReviewRepository Reviews { get; private set; }
         public IUserRepository Users { get; private set; }
+        public IInternalAmenityRepository InternalAmenities { get; private set; }
+        public IExternalAmenityRepository ExternalAmenities { get; private set; }
+        public IAccessibilityAmenityRepository AccessibilityAmenities { get; private set; }
 
         //***********************************************************************************
         private readonly ConcurrentDictionary<string, object> _repositoty;
@@ -25,7 +28,10 @@ namespace DigitalPropertyManagementBLL.Repositories
             Properties = new PropertyRepository(context);
             Favorites = new FavoriteRepository(context);
             Reviews = new ReviewRepository(context);
-            Users = new UserRepository(context);  
+            Users = new UserRepository(context);
+            InternalAmenities=new InternalAmenityRepository(context);
+            ExternalAmenities=new ExternalAmenityRepository(context);
+            AccessibilityAmenities=new AccessibilityAmenityRepository(context);
             _repositoty = new ConcurrentDictionary<string, object>();
         }
 

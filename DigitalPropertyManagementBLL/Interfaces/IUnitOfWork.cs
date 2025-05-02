@@ -13,6 +13,9 @@ namespace DigitalPropertyManagementBLL.Interfaces
         IFavoriteRepository Favorites { get; }
         IReviewRepository Reviews { get; }
         IUserRepository Users { get; }
+        IInternalAmenityRepository InternalAmenities { get; }
+        IExternalAmenityRepository ExternalAmenities { get; }
+        IAccessibilityAmenityRepository AccessibilityAmenities { get; }
         IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity;
         Task<int> SaveAllAsync();
     }
