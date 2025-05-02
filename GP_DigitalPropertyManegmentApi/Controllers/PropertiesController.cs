@@ -246,7 +246,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok(propertiesRead);
         }
 
-    
+
         [HttpPost("Create")]
         public async Task<IActionResult> CreateProperty([FromForm] PropertyCreateDto propertyDto)
         {
@@ -257,7 +257,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             if (string.IsNullOrWhiteSpace(email))
                 return Unauthorized("Email not found in user claims.");
 
-            var user = await _userService.GetUserByEmailAsync(email); 
+            var user = await _userService.GetUserByEmailAsync(email);
             if (user == null)
                 return NotFound("User not found.");
 
@@ -273,7 +273,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 City = propertyDto.City,
                 Governate = propertyDto.Governate,
                 Price = propertyDto.Price,
-                UserId=user.UserId,
+                UserId = user.UserId,
                 LocationUrl = propertyDto.LocationUrl,
                 ListingType = propertyDto.ListingType,
                 ListedAt = DateTime.UtcNow,
@@ -334,7 +334,10 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             await _unitOfWork.Properties.AddAsync(newProperty);
             await _unitOfWork.SaveAllAsync();
 
-            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.PropertyId }, newProperty);
+            var propertResponse = mapper.Map<PropertyResponseDto>(newProperty);
+
+            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.PropertyId }, propertResponse);
+
         }
 
         [HttpPut("Update/{id:int}")]
