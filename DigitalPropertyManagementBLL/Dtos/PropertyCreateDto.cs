@@ -25,5 +25,10 @@ namespace DigitalPropertyManagementBLL.Dtos
 
         public IEnumerable<IFormFile> Images { get; set; }
 
+        // Added lists for amenity IDs
+        public List<int> InternalAmenityIds { get; set; } = new List<int>();
+        public List<int> ExternalAmenityIds { get; set; } = new List<int>();
+        public List<int> AccessibilityAmenityIds { get; set; } = new List<int>();
+
     }
 }

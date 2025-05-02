@@ -2,6 +2,7 @@
 using DigitalPropertyManagementBLL.Dtos;
 using DigitalPropertyManagementBLL.Interfaces;
 using DigitalPropertyManagementBLL.Services;
+using DigitslPropertyManangementDAL.Data.Models;
 using GP_DigitalPropertyManegmentApi.Data.Context;
 using GP_DigitalPropertyManegmentApi.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -278,12 +279,57 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
                 ListedAt = DateTime.UtcNow,
 
             };
+
+            //Handle Add images
             var imagesPath = DocumentSettings.UploadFiles(propertyDto.Images, "images");
             foreach (var image in imagesPath)
             {
                 newProperty.PropertyImages.Add(new PropertyImage()
                 { ImageUrl = $"{configuration["BaseUrl"]}/files/images/{image}", PropertyId = newProperty.PropertyId });
             }
+
+            // Handle Internal Amenities
+            if (propertyDto.InternalAmenityIds != null && propertyDto.InternalAmenityIds.Any())
+            {
+                var internalAmenities = new List<InternalAmenity>();
+                foreach (var id in propertyDto.InternalAmenityIds)
+                {
+                    var amenity = await _unitOfWork.InternalAmenities.GetByIdAsync(id);
+                    if (amenity == null)
+                        return BadRequest($"Internal amenity with ID {id} not found.");
+                    internalAmenities.Add(amenity);
+                }
+                newProperty.InternalAmenities = internalAmenities;
+            }
+
+            // Handle External Amenities
+            if (propertyDto.ExternalAmenityIds != null && propertyDto.ExternalAmenityIds.Any())
+            {
+                var externalAmenities = new List<ExternalAmenity>();
+                foreach (var id in propertyDto.ExternalAmenityIds)
+                {
+                    var amenity = await _unitOfWork.ExternalAmenities.GetByIdAsync(id);
+                    if (amenity == null)
+                        return BadRequest($"External amenity with ID {id} not found.");
+                    externalAmenities.Add(amenity);
+                }
+                newProperty.ExternalAmenities = externalAmenities;
+            }
+
+            // Handle Accessibility Amenities
+            if (propertyDto.AccessibilityAmenityIds != null && propertyDto.AccessibilityAmenityIds.Any())
+            {
+                var accessibilityAmenities = new List<AccessibillityAmenity>();
+                foreach (var id in propertyDto.AccessibilityAmenityIds)
+                {
+                    var amenity = await _unitOfWork.AccessibilityAmenities.GetByIdAsync(id);
+                    if (amenity == null)
+                        return BadRequest($"Accessibility amenity with ID {id} not found.");
+                    accessibilityAmenities.Add(amenity);
+                }
+                newProperty.AccessibilityAmenities = accessibilityAmenities;
+            }
+
 
             await _unitOfWork.Properties.AddAsync(newProperty);
             await _unitOfWork.SaveAllAsync();
