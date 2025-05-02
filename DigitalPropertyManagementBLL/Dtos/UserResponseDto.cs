@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DigitalPropertyManagementBLL.Dtos
 {
-    public class UserUpdateDto
+    public class UserResponseDto
     {
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; }
@@ -24,7 +23,5 @@ namespace DigitalPropertyManagementBLL.Dtos
         public string? City { get; set; }
 
         public string? ImageUrl { get; set; }
-        public IFormFile? Image { get; set; }
-
     }
 }

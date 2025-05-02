@@ -405,6 +405,7 @@ namespace DigitalPropertyManagementBLL.Services
             user.PhoneNumber = userDto.PhoneNumber;
             user.Email = userDto.Email;
             user.City = userDto.City;
+            user.ImageUrl = userDto.ImageUrl;
 
             
             _userRepository.UpdateUser(user);
