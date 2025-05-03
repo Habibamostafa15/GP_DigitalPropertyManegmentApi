@@ -20,5 +20,6 @@ namespace DigitalPropertyManagementBLL.Interfaces
         Task<User> LoginWithGoogleAsync(string email, string firstName, string lastName);
 
         Task<bool> UpdateUser(int id, UserUpdateDto userDto);
+        Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto);
     }
 }

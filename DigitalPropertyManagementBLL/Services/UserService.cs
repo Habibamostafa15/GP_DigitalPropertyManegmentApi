@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Management;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DigitalPropertyManagementBLL.Services
 {
@@ -18,13 +18,15 @@ namespace DigitalPropertyManagementBLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IUnitOfWork _unitOfWork;
         private static readonly Dictionary<string, (string Otp, DateTime Expiry, DateTime LastRequestTime, string Purpose)> _otpStore = new();
 
-        public UserService(IUserRepository userRepository, IEmailService emailService, IPasswordHasher<User> passwordHasher)
+        public UserService(IUserRepository userRepository, IEmailService emailService, IPasswordHasher<User> passwordHasher, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _emailService = emailService;
             _passwordHasher = passwordHasher;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> RegisterUserAsync(UserDTO userDto)
@@ -112,8 +114,7 @@ namespace DigitalPropertyManagementBLL.Services
 
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            var result = await _userRepository.GetUserByIdAsync(id);
-            return result;
+            return await _userRepository.GetUserByIdAsync(id);
         }
 
         public async Task<string> GenerateOtpAsync(string email)
@@ -367,29 +368,24 @@ namespace DigitalPropertyManagementBLL.Services
                 Email = loginDto.Email,
                 Token = await GenerateJwtToken(user)
             };
-            
         }
 
         public async Task<string> GenerateJwtToken(User user)
         {
-
             var userClaims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SymmetrisdcSecurityKeyasfasfasfasfasfasfffasfasgbEncoding.UTF8.GetBytes"));
-
 
             var token = new JwtSecurityToken(
                 issuer: "http://digitalpropertyapi.runasp.net",
                 claims: userClaims,
                 expires: DateTime.UtcNow.AddDays(7),
-                signingCredentials: new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature)
-
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -399,7 +395,7 @@ namespace DigitalPropertyManagementBLL.Services
         {
             var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null) return false;
-            
+
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
             user.PhoneNumber = userDto.PhoneNumber;
@@ -407,10 +403,48 @@ namespace DigitalPropertyManagementBLL.Services
             user.City = userDto.City;
             user.ImageUrl = userDto.ImageUrl;
 
-            
             _userRepository.UpdateUser(user);
-
+            await _unitOfWork.SaveAllAsync();
             return true;
+        }
+
+        public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto)
+        {
+            Console.WriteLine($"ChangePasswordAsync called with UserId: {userId}, OldPassword: {changePasswordDto.OldPassword}, NewPassword: {changePasswordDto.NewPassword}");
+
+            if (changePasswordDto.NewPassword != changePasswordDto.ConfirmNewPassword)
+            {
+                Console.WriteLine("NewPassword and ConfirmNewPassword do not match.");
+                return false;
+            }
+
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                Console.WriteLine("User not found.");
+                return false;
+            }
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, changePasswordDto.OldPassword);
+            if (result != PasswordVerificationResult.Success)
+            {
+                Console.WriteLine("Old password verification failed.");
+                return false;
+            }
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, changePasswordDto.NewPassword);
+            _userRepository.UpdateUser(user);
+            try
+            {
+                await _unitOfWork.SaveAllAsync();
+                Console.WriteLine("Password updated successfully.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+                return false;
+            }
         }
     }
 }

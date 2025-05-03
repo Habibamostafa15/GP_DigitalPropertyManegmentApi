@@ -406,54 +406,6 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
-        [HttpPut("Update")]
-        public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userDto)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userId == null) return Unauthorized();
-
-            var ImagePath = DocumentSettings.UploadFile(userDto.Image, "UserImage");
-
-            userDto.ImageUrl = $"{configuration["BaseUrl"]}/files/UserImage/{ImagePath}";
-
-            int id = int.Parse(userId.Value);
-            var flag = await _userService.UpdateUser(id, userDto);
-
-            var userResponse = new UserResponseDto
-            {
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Email = userDto.Email,
-                PhoneNumber = userDto.PhoneNumber,
-                City = userDto.City,
-                ImageUrl = userDto.ImageUrl,
-            };
-
-            return flag ? Ok(userResponse) : BadRequest();
-        }
-
-        [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUser()
-        {
-            var user = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (user == null) return Unauthorized();
-            var userId = int.Parse(user.Value);
-
-            var result = await _userService.GetUserByIdAsync(userId);
-            if (result == null) return NotFound();
-
-            var userDto = new UserResponseDto
-            {
-                FirstName = result.FirstName,
-                LastName = result.LastName,
-                Email = result.Email,
-                PhoneNumber = result.PhoneNumber,
-                City = result.City,
-                ImageUrl = result.ImageUrl,
-            };
-
-
-            return Ok(userDto); 
-        }
+       
     }
 }
