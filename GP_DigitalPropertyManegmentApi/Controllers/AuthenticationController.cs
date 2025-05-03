@@ -129,13 +129,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             }
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            _logger.LogInformation("User logged out successfully.");
-            return Ok(new { Status = "Success", Message = "Logout successful." });
-        }
+   
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] EmailDTO emailDto)

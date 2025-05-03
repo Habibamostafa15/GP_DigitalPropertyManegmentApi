@@ -21,5 +21,8 @@ namespace DigitalPropertyManagementBLL.Interfaces
 
         Task<bool> UpdateUser(int id, UserUpdateDto userDto);
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto);
+
+    
     }
+
 }
