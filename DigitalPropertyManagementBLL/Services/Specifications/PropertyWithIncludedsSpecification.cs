@@ -48,7 +48,8 @@ namespace DigitalPropertyManagementBLL.Services.Specifications
         public PropertyWithIncludedsSpecification(string city)
             : base
             (
-                  p => p.City.Trim().ToLower() == city.Trim().ToLower()
+                   p => city.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                   .All(word => p.City.ToLower().Contains(word.ToLower()))
             )
         {
             ApplyIncludes();
