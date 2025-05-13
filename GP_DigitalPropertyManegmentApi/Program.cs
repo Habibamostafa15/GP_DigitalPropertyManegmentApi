@@ -18,22 +18,21 @@ namespace GP_DigitalPropertyManegmentApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add DbContext
+       
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add Controllers with JSON options
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 });
 
-            // Add Swagger
+          
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                // Add JWT Authentication support in Swagger
+               
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -58,7 +57,7 @@ namespace GP_DigitalPropertyManegmentApi
                 });
             });
 
-            // Add CORS
+          
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", builder =>
@@ -69,7 +68,6 @@ namespace GP_DigitalPropertyManegmentApi
                 });
             });
 
-            // Add Scoped Services
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -80,10 +78,10 @@ namespace GP_DigitalPropertyManegmentApi
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IServicesManager, ServicesManager>();
 
-            // Add AutoMapper
+      
             builder.Services.AddAutoMapper(typeof(AssemblyReference).Assembly);
 
-            // Add JWT Authentication
+            
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,7 +102,7 @@ namespace GP_DigitalPropertyManegmentApi
 
             var app = builder.Build();
 
-            // Configure Middleware
+        
             app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI();

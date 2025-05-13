@@ -22,7 +22,6 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             _configuration = configuration;
         }
 
-        // Existing UpdateUser endpoint
         [HttpPut("Update")]
         [Authorize]
         public async Task<IActionResult> UpdateUser([FromForm] UserUpdateDto userDto)
@@ -50,7 +49,6 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return flag ? Ok(userResponse) : BadRequest();
         }
 
-        // Existing GetUser endpoint
         [HttpGet("GetUser")]
         [Authorize]
         public async Task<IActionResult> GetUser()
@@ -75,7 +73,6 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             return Ok(userDto);
         }
 
-        // New ChangePassword endpoint
         [HttpPut("ChangePassword")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
@@ -88,7 +85,7 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
             {
-                return Unauthorized(new { message = "User not authenticated." });
+                return Unauthorized(new { message = "The user is not authenticated." });
             }
 
             int userId = int.Parse(userIdClaim.Value);
@@ -96,10 +93,18 @@ namespace GP_DigitalPropertyManegmentApi.Controllers
 
             if (!result)
             {
-                return BadRequest(new { message = "Failed to change password. Please check your input and try again." });
+                return BadRequest(new { message = "Password change failed. Please check the information and try again." });
             }
 
-            return Ok(new { message = "Password changed successfully." });
+            return Ok(new { message = "The password changed successfully." });
+        }
+
+        [HttpPost("Logout")]
+        [Authorize]
+        public IActionResult Logout()
+        {
+          
+            return Ok(new { message = "Logged out successfully" });
         }
     }
 }
